@@ -152,6 +152,13 @@
   .dash-content{padding:32px 36px;overflow-x:hidden;}
   .dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
   .dash-head h2{font-family:var(--font-display);font-size:26px;}
+  .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;transition:.15s;}
+  .stat-card:hover{border-color:var(--violet);}
+  .stat-icon{font-size:22px;margin-bottom:8px;}
+  .stat-num{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--white);}
+  .stat-lbl{font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;}
+  @media(max-width:860px){.admin-stats{grid-template-columns:repeat(2,1fr);}}
   table.tbl{width:100%;border-collapse:collapse;}
   table.tbl th{text-align:left;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--slate);padding:10px 14px;border-bottom:1px solid var(--line);letter-spacing:.04em;}
   table.tbl td{padding:14px;border-bottom:1px solid var(--line);font-size:13.5px;}
@@ -267,6 +274,7 @@ es: {
   contract_legal:'Al aceptar, este acuerdo queda registrado con tu email, wallet y fecha. El pago se realizará tras la verificación de los entregables.',
   // Dashboard
   dash_panel:'Panel',
+  dash_visits:'Visitas a la web', dash_registered:'Influencers registrados', dash_active_camps:'Campañas activas', dash_total_apps:'Postulaciones',
   dash_campaigns:'Campañas', dash_applications:'Postulaciones', dash_influencers:'Influencers',
   dash_my_apps:'Mis postulaciones', dash_my_profile:'Mi perfil',
   dash_total:'total', dash_approve:'Aprobar', dash_reject:'Rechazar',
@@ -338,6 +346,7 @@ en: {
   contract_auto_msg:'🤝 Collaboration started! {title} — Start date: {date}. Welcome to the team. Use this chat to coordinate deliverables.',
   contract_legal:'By accepting, this agreement is recorded with your email, wallet and date. Payment will be made after deliverables are verified.',
   dash_panel:'Dashboard',
+  dash_visits:'Page visits', dash_registered:'Registered influencers', dash_active_camps:'Active campaigns', dash_total_apps:'Applications',
   dash_campaigns:'Campaigns', dash_applications:'Applications', dash_influencers:'Influencers',
   dash_my_apps:'My applications', dash_my_profile:'My profile',
   dash_total:'total', dash_approve:'Approve', dash_reject:'Reject',
@@ -364,7 +373,7 @@ const state = {
   view:'landing', authTab:'login', lang:'es',
   currentUser:null, dashSection:'campañas', mobileMenuOpen:false,
   activeChatId:null, campFilter:'todas', modal:null, formError:'',
-  secretClicks:0, secretClickTimer:null,
+  secretClicks:0, secretClickTimer:null, visitCount:0,
 
   users: [
     {id:'u-admin', email:'diamondwallcoin@proton.me', password:'admin123', rol:'admin', nombre_completo:'DiamondWall Team', estado:'activo'}
@@ -381,6 +390,19 @@ const state = {
 };
 
 function uid(p){return p+'-'+Math.random().toString(36).slice(2,9);}
+
+/* Contador de visitas */
+(async function trackVisit(){
+  const NS='chuminicky-dwall',K='visits';
+  try{
+    const visited=sessionStorage.getItem('cv');
+    const url='https://api.counterapi.dev/v1/'+NS+'/'+K+(visited?'':'/up');
+    const r=await fetch(url);const d=await r.json();
+    state.visitCount=d.count||0;
+    if(!visited) sessionStorage.setItem('cv','1');
+    if(state.view==='dashboard'&&state.currentUser&&state.currentUser.rol==='admin') render();
+  }catch(e){state.visitCount='—';}
+})();
 function lt(v){return typeof v==='object'&&v!==null&&(v.es||v.en)? (v[state.lang]||v.es||v.en) : v;}
 function secretAdminClick(){
   state.secretClicks++;
@@ -730,6 +752,21 @@ function Dashboard(){
   sb.appendChild(sec);d.appendChild(sb);
   const ct=el('div',{class:'dash-content'});
   if(isA){
+    /* Stats bar solo para admin */
+    const stats=el('div',{class:'admin-stats'});
+    [[String(state.visitCount),t('dash_visits'),'👁️'],
+     [String(state.users.filter(u=>u.rol==='influencer').length),t('dash_registered'),'🎙️'],
+     [String(state.campañas.filter(c=>c.estado==='activa').length),t('dash_active_camps'),'📢'],
+     [String(state.postulaciones.length),t('dash_total_apps'),'📋']
+    ].forEach(([num,lbl,icon])=>{
+      const card=el('div',{class:'stat-card'},[
+        el('div',{class:'stat-icon'},[icon]),
+        el('div',{class:'stat-num'},[num]),
+        el('div',{class:'stat-lbl'},[lbl])
+      ]);
+      stats.appendChild(card);
+    });
+    ct.appendChild(stats);
     if(state.dashSection==='campañas') ct.appendChild(AdminCamp());
     else if(state.dashSection==='influencers') ct.appendChild(AdminInf());
     else ct.appendChild(AdminPost());
