@@ -222,11 +222,11 @@ es: {
   role_influencer:'INFLUENCER',
   hero_eyebrow:'Campañas de marketing — DiamondWall ($DWALL)',
   hero_title:'Únete como <span class="accent">influencer</span> y promociona el futuro de DeFi en BSC.',
-  hero_sub:'Chuminicky Publiciters es el canal oficial de campañas de marketing de DiamondWall ($DWALL) — plataforma DeFi de rendimiento real en Binance Smart Chain. Postúlate, coordina y cobra directamente en $DWALL tokens.',
+  hero_sub:'Chuminicky Publiciters es el canal oficial de campañas de marketing de DiamondWall ($DWALL) — plataforma DeFi de rendimiento real en Binance Smart Chain. Postúlate, coordina y cobra en $DWALL tokens (equivalente en USD al precio post-preventa).',
   hero_cta_campaigns:'Ver campañas activas', hero_cta_register:'Registrarme como influencer',
   stat_active:'Campañas activas', stat_influencers:'Influencers registrados', stat_channel:'Canal de mensajería por campaña',
   how_eyebrow:'Cómo funciona', how_title:'De la postulación al pago, en un solo lugar',
-  flow1_t:'Publicamos la campaña', flow1_d:'Se crea una campaña con presupuesto en $DWALL, plataforma, requisitos y fecha límite.',
+  flow1_t:'Publicamos la campaña', flow1_d:'Se crea una campaña con presupuesto en USD (pagado en $DWALL), plataforma, requisitos y fecha límite.',
   flow2_t:'Te postulas', flow2_d:'Completas tu ficha (redes, nicho, wallet BSC) y aplicas a la campaña que te interese.',
   flow3_t:'Se genera tu ficha', flow3_d:'Automáticamente queda registrada tu postulación, lista para revisión del equipo.',
   flow4_t:'Chat directo', flow4_d:'Coordinamos detalles, entregables y pago en tu canal privado con el equipo DiamondWall.',
@@ -299,11 +299,11 @@ en: {
   role_influencer:'INFLUENCER',
   hero_eyebrow:'Marketing campaigns — DiamondWall ($DWALL)',
   hero_title:'Join as an <span class="accent">influencer</span> and promote the future of DeFi on BSC.',
-  hero_sub:'Chuminicky Publiciters is the official marketing campaign channel for DiamondWall ($DWALL) — a real yield DeFi platform on Binance Smart Chain. Apply, coordinate and get paid directly in $DWALL tokens.',
+  hero_sub:'Chuminicky Publiciters is the official marketing campaign channel for DiamondWall ($DWALL) — a real yield DeFi platform on Binance Smart Chain. Apply, coordinate and get paid in $DWALL tokens (USD equivalent at post-presale price).',
   hero_cta_campaigns:'View active campaigns', hero_cta_register:'Register as influencer',
   stat_active:'Active campaigns', stat_influencers:'Registered influencers', stat_channel:'Messaging channel per campaign',
   how_eyebrow:'How it works', how_title:'From application to payment, all in one place',
-  flow1_t:'We publish the campaign', flow1_d:'A campaign is created with budget in $DWALL, platform, requirements and deadline.',
+  flow1_t:'We publish the campaign', flow1_d:'A campaign is created with budget in USD (paid in $DWALL), platform, requirements and deadline.',
   flow2_t:'You apply', flow2_d:'Fill out your profile (socials, niche, BSC wallet) and apply to the campaign you like.',
   flow3_t:'Your brief is generated', flow3_d:'Your application is automatically registered and ready for team review.',
   flow4_t:'Direct chat', flow4_d:'We coordinate details, deliverables and payment in your private channel with the DiamondWall team.',
@@ -379,10 +379,10 @@ const state = {
     {id:'u-admin', email:'diamondwallcoin@proton.me', password:'admin123', rol:'admin', nombre_completo:'DiamondWall Team', estado:'activo'}
   ],
   campañas: [
-    {id:'c1', titulo:{es:'Pre-lanzamiento $DWALL — Campaña de awareness en X',en:'$DWALL Pre-launch — Awareness Campaign on X'}, descripcion:{es:'Campaña de difusión pre-lanzamiento en BSC Mainnet. Mínimo 5 posts en X (Twitter) sobre DiamondWall: qué es, cómo funciona el rendimiento real via Venus Protocol, smart contracts auditados (412 tests, 0 vulnerabilidades), supply fijo y 0% fee. Etiquetar @diamondwallcoin, usar #DWALL #BSC #DeFi e incluir link del proyecto en al menos 2 posts.',en:'Pre-launch awareness campaign before BSC Mainnet. Minimum 5 posts on X (Twitter) about DiamondWall: what it is, how real yield works via Venus Protocol, audited smart contracts (412 tests, 0 vulnerabilities), fixed supply and 0% fee. Tag @diamondwallcoin, use #DWALL #BSC #DeFi and include project link in at least 2 posts.'}, plataforma:'X (Twitter)', tipo:{es:'Posts + Hilos',en:'Posts + Threads'}, presupuesto:50, moneda:'$DWALL', requisitos:{es:'Nicho cripto/DeFi/BSC, contenido en inglés o español, cuenta activa en X',en:'Crypto/DeFi/BSC niche, English or Spanish content, active X account'}, fecha_limite:'2026-08-15', estado:'activa', creado_por:'u-admin',
+    {id:'c1', titulo:{es:'Pre-lanzamiento $DWALL — Campaña de awareness en X',en:'$DWALL Pre-launch — Awareness Campaign on X'}, descripcion:{es:'Campaña de difusión pre-lanzamiento en BSC Mainnet. Mínimo 5 posts en X (Twitter) sobre DiamondWall: qué es, cómo funciona el rendimiento real via Venus Protocol, smart contracts auditados (412 tests, 0 vulnerabilidades), supply fijo y 0% fee. Etiquetar @diamondwallcoin, usar #DWALL #BSC #DeFi e incluir link del proyecto en al menos 2 posts.',en:'Pre-launch awareness campaign before BSC Mainnet. Minimum 5 posts on X (Twitter) about DiamondWall: what it is, how real yield works via Venus Protocol, audited smart contracts (412 tests, 0 vulnerabilities), fixed supply and 0% fee. Tag @diamondwallcoin, use #DWALL #BSC #DeFi and include project link in at least 2 posts.'}, plataforma:'X (Twitter)', tipo:{es:'Posts + Hilos',en:'Posts + Threads'}, presupuesto:50, moneda:'USD en $DWALL', requisitos:{es:'Nicho cripto/DeFi/BSC, contenido en inglés o español, cuenta activa en X',en:'Crypto/DeFi/BSC niche, English or Spanish content, active X account'}, fecha_limite:'2026-08-15', estado:'activa', creado_por:'u-admin',
       links:{web:'https://diamondwall.vercel.app', audit:'https://github.com/PRBx77/diamondwall-audit', twitter:'https://x.com/diamondwallcoin', github:'https://github.com/PRBx77/diamondwall-frontend'},
       entregables:{es:'• Mínimo 5 posts sobre $DWALL en X\n• Etiquetar @diamondwallcoin en todos\n• Hashtags: #DWALL #BSC #DeFi\n• Link del proyecto en al menos 2 posts',en:'• Minimum 5 posts about $DWALL on X\n• Tag @diamondwallcoin in all posts\n• Hashtags: #DWALL #BSC #DeFi\n• Include project link in at least 2 posts'},
-      pago_info:{es:'Pago en $DWALL tokens tras despliegue en BSC Mainnet. Monto calculado a precio de mercado. Transferencia on-chain verificable.',en:'Payment in $DWALL tokens after BSC Mainnet deployment. Amount calculated at market price. Verifiable on-chain transfer.'}
+      pago_info:{es:'Pago de $50 USD equivalentes en tokens $DWALL. El monto en tokens se calculará al precio de $DWALL una vez cerrada la preventa y activado el trading en BSC Mainnet. Transferencia on-chain verificable.',en:'Payment of $50 USD equivalent in $DWALL tokens. Token amount will be calculated at $DWALL price once presale closes and trading is activated on BSC Mainnet. Verifiable on-chain transfer.'}
     }
   ],
   postulaciones: [],
