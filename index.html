@@ -121,6 +121,12 @@
   .camp-meta{display:flex;flex-wrap:wrap;gap:8px;}
   .meta-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--white);background:var(--ink-2);border:1px solid var(--line);padding:4px 9px;border-radius:6px;}
   .camp-pay{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;}
+  .camp-links{display:flex;flex-wrap:wrap;gap:8px;}
+  .camp-link{font-family:var(--font-mono);font-size:11px;color:var(--violet);border:1px solid var(--line);padding:5px 10px;border-radius:6px;transition:.15s;text-decoration:none;display:inline-block;}
+  .camp-link:hover{border-color:var(--violet);background:rgba(124,92,255,0.08);}
+  .camp-deliverables,.camp-pago-info{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px;}
+  .cdl-title{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--lime);letter-spacing:.04em;margin-bottom:8px;}
+  .cdl-text{color:var(--slate);line-height:1.65;}
   .pay-amt{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--lime);}
   .pay-deadline{font-size:11px;color:var(--slate);font-family:var(--font-mono);}
 
@@ -200,19 +206,19 @@ es: {
   nav_home:'Inicio', nav_campaigns:'Campañas', nav_panel:'Panel', nav_messages:'Mensajes',
   nav_login:'Iniciar sesión', nav_register:'Registrarse', nav_logout:'Cerrar sesión',
   role_influencer:'INFLUENCER',
-  hero_eyebrow:'Marketing de influencers para proyectos cripto',
-  hero_title:'El canal donde tu proyecto y los <span class="accent">influencers</span> cierran campañas, sin ruido.',
-  hero_sub:'Chuminicky Publiciters conecta proyectos cripto con creadores de contenido reales. Publica campañas, recibe postulaciones, y gestiona todo — desde la ficha hasta el pago — en un único canal de mensajería interna.',
+  hero_eyebrow:'Campañas de marketing — DiamondWall ($DWALL)',
+  hero_title:'Únete como <span class="accent">influencer</span> y promociona el futuro de DeFi en BSC.',
+  hero_sub:'Chuminicky Publiciters es el canal oficial de campañas de marketing de DiamondWall ($DWALL) — plataforma DeFi de rendimiento real en Binance Smart Chain. Postúlate, coordina y cobra directamente en $DWALL tokens.',
   hero_cta_campaigns:'Ver campañas activas', hero_cta_register:'Registrarme como influencer',
   stat_active:'Campañas activas', stat_influencers:'Influencers registrados', stat_channel:'Canal de mensajería por campaña',
   how_eyebrow:'Cómo funciona', how_title:'De la postulación al pago, en un solo lugar',
-  flow1_t:'El admin publica', flow1_d:'Se crea una campaña con presupuesto, plataforma, requisitos y fecha límite.',
-  flow2_t:'El influencer se postula', flow2_d:'Completa su ficha (redes, nicho, wallet) y aplica a la campaña que le interesa.',
-  flow3_t:'Se genera la ficha', flow3_d:'Automáticamente queda registrada la postulación, lista para revisión del admin.',
-  flow4_t:'Chat directo', flow4_d:'Influencer y admin coordinan detalles, entregables y pago en su canal privado.',
-  why_eyebrow:'Propósito', why_title:'Por qué existe esta plataforma',
-  why_text:'Chuminicky Publiciters nace para ordenar el marketing de influencers de nuestro proyecto cripto: en lugar de coordinar campañas por DMs sueltos y hojas de cálculo, cada campaña tiene su propia ficha, su propio historial y su propio canal de chat directo con el equipo. Así, tanto el influencer como el admin saben siempre en qué punto está cada colaboración.',
-  footer:'CHUMINICKY PUBLICITERS © 2026 — CANAL OFICIAL DE CAMPAÑAS Y COMUNICACIÓN CON INFLUENCERS',
+  flow1_t:'Publicamos la campaña', flow1_d:'Se crea una campaña con presupuesto en $DWALL, plataforma, requisitos y fecha límite.',
+  flow2_t:'Te postulas', flow2_d:'Completas tu ficha (redes, nicho, wallet BSC) y aplicas a la campaña que te interese.',
+  flow3_t:'Se genera tu ficha', flow3_d:'Automáticamente queda registrada tu postulación, lista para revisión del equipo.',
+  flow4_t:'Chat directo', flow4_d:'Coordinamos detalles, entregables y pago en tu canal privado con el equipo DiamondWall.',
+  why_eyebrow:'Sobre el proyecto', why_title:'¿Qué es DiamondWall ($DWALL)?',
+  why_text:'DiamondWall es una plataforma DeFi automatizada en Binance Smart Chain. Cuando un usuario compra $DWALL, su BNB se divide automáticamente: 50% invertido en Venus Protocol generando rendimiento real, 45% a pools de liquidez en 4 DEXs, y 5% a operaciones. Código 100% open source, 6 smart contracts auditados con 412 tests y 0 vulnerabilidades. Supply fijo, 0% fee de transferencia.',
+  footer:'CHUMINICKY PUBLICITERS © 2026 — CANAL OFICIAL DE CAMPAÑAS DIAMONDWALL ($DWALL)',
   closes:'cierra',
   // Auth
   auth_login:'Iniciar sesión', auth_register:'Registro nuevo',
@@ -220,20 +226,21 @@ es: {
   auth_email:'Email', auth_pass:'Contraseña', auth_name:'Nombre completo',
   auth_error_creds:'Email o contraseña incorrectos.', auth_error_fields:'Completa nombre, email y una contraseña de al menos 4 caracteres.',
   auth_error_exists:'Ya existe una cuenta con ese email.',
-  auth_join:'Únete como influencer', auth_join_sub:'Regístrate para ver y postularte a campañas de marketing cripto.',
+  auth_join:'Únete como influencer', auth_join_sub:'Regístrate para postularte a campañas de marketing de DiamondWall ($DWALL).',
   auth_profile_data:'Datos de perfil', auth_alias:'Alias / nombre público', auth_social:'Redes sociales',
   auth_niche:'Nicho', auth_niche_ph:'Ej: Cripto, DeFi, NFTs', auth_wallet:'Wallet (para pagos)',
   auth_bio:'Bio', auth_bio_ph:'Cuéntanos brevemente sobre tu contenido...', auth_create:'Crear cuenta',
   auth_add_net:'+ Añadir otra red', auth_user_ph:'usuario o link', auth_followers_ph:'seguidores',
   auth_demo:'Demo: ',
   // Admin auth
-  admin_title:'Acceso administrador', admin_sub:'Panel reservado para el equipo Chuminicky.',
+  admin_title:'Acceso administrador', admin_sub:'Panel reservado para el equipo DiamondWall.',
   admin_email_label:'Email admin', admin_error:'Credenciales de admin incorrectas.', admin_enter:'Entrar al panel', admin_back:'Volver al inicio',
   // Campaigns
   camp_eyebrow:'Oportunidades abiertas', camp_title:'Campañas ofertadas',
   filter_all:'Todas', filter_active:'Activas', filter_closed:'Cerradas',
   camp_active:'ACTIVA', camp_closed:'CERRADA', camp_no_results:'No hay campañas aquí', camp_try_filter:'Prueba con otro filtro.',
   camp_already:'Ya postulado', camp_apply:'Postularme', camp_login_first:'Inicia sesión',
+  camp_deliverables:'Entregables requeridos', camp_payment_info:'Detalles de pago',
   // Apply modal
   apply_title:'Postularme', apply_alias:'Alias: ', apply_niche:'Nicho: ', apply_wallet:'Wallet: ',
   apply_info:'Al postularte se generará automáticamente tu ficha de postulación, visible para el equipo admin.',
@@ -263,37 +270,38 @@ en: {
   nav_home:'Home', nav_campaigns:'Campaigns', nav_panel:'Dashboard', nav_messages:'Messages',
   nav_login:'Log in', nav_register:'Sign up', nav_logout:'Log out',
   role_influencer:'INFLUENCER',
-  hero_eyebrow:'Influencer marketing for crypto projects',
-  hero_title:'The channel where your project and <span class="accent">influencers</span> close campaigns, no noise.',
-  hero_sub:'Chuminicky Publiciters connects crypto projects with real content creators. Publish campaigns, receive applications, and manage everything — from the brief to payment — in a single internal messaging channel.',
+  hero_eyebrow:'Marketing campaigns — DiamondWall ($DWALL)',
+  hero_title:'Join as an <span class="accent">influencer</span> and promote the future of DeFi on BSC.',
+  hero_sub:'Chuminicky Publiciters is the official marketing campaign channel for DiamondWall ($DWALL) — a real yield DeFi platform on Binance Smart Chain. Apply, coordinate and get paid directly in $DWALL tokens.',
   hero_cta_campaigns:'View active campaigns', hero_cta_register:'Register as influencer',
   stat_active:'Active campaigns', stat_influencers:'Registered influencers', stat_channel:'Messaging channel per campaign',
   how_eyebrow:'How it works', how_title:'From application to payment, all in one place',
-  flow1_t:'Admin publishes', flow1_d:'A campaign is created with budget, platform, requirements and deadline.',
-  flow2_t:'Influencer applies', flow2_d:'Fills out their profile (socials, niche, wallet) and applies to the campaign.',
-  flow3_t:'Brief is generated', flow3_d:'The application is automatically registered and ready for admin review.',
-  flow4_t:'Direct chat', flow4_d:'Influencer and admin coordinate details, deliverables and payment in their private channel.',
-  why_eyebrow:'Purpose', why_title:'Why this platform exists',
-  why_text:'Chuminicky Publiciters was built to streamline influencer marketing for our crypto project: instead of coordinating campaigns through scattered DMs and spreadsheets, each campaign has its own brief, its own history, and its own direct chat channel with the team. This way, both the influencer and admin always know exactly where each collaboration stands.',
-  footer:'CHUMINICKY PUBLICITERS © 2026 — OFFICIAL CAMPAIGN & INFLUENCER COMMUNICATION CHANNEL',
+  flow1_t:'We publish the campaign', flow1_d:'A campaign is created with budget in $DWALL, platform, requirements and deadline.',
+  flow2_t:'You apply', flow2_d:'Fill out your profile (socials, niche, BSC wallet) and apply to the campaign you like.',
+  flow3_t:'Your brief is generated', flow3_d:'Your application is automatically registered and ready for team review.',
+  flow4_t:'Direct chat', flow4_d:'We coordinate details, deliverables and payment in your private channel with the DiamondWall team.',
+  why_eyebrow:'About the project', why_title:'What is DiamondWall ($DWALL)?',
+  why_text:'DiamondWall is an automated DeFi platform on Binance Smart Chain. When a user buys $DWALL, their BNB is automatically split: 50% invested in Venus Protocol generating real yield, 45% to liquidity pools across 4 DEXs, and 5% to operations. 100% open source code, 6 audited smart contracts with 412 tests and 0 vulnerabilities. Fixed supply, 0% transfer fee.',
+  footer:'CHUMINICKY PUBLICITERS © 2026 — OFFICIAL DIAMONDWALL ($DWALL) CAMPAIGN CHANNEL',
   closes:'closes',
   auth_login:'Log in', auth_register:'Sign up',
   auth_welcome:'Welcome back', auth_welcome_sub:'Access with your influencer account.',
   auth_email:'Email', auth_pass:'Password', auth_name:'Full name',
   auth_error_creds:'Incorrect email or password.', auth_error_fields:'Please fill in name, email and a password of at least 4 characters.',
   auth_error_exists:'An account with this email already exists.',
-  auth_join:'Join as influencer', auth_join_sub:'Sign up to view and apply to crypto marketing campaigns.',
+  auth_join:'Join as influencer', auth_join_sub:'Sign up to apply to DiamondWall ($DWALL) marketing campaigns.',
   auth_profile_data:'Profile details', auth_alias:'Alias / public name', auth_social:'Social media',
   auth_niche:'Niche', auth_niche_ph:'E.g.: Crypto, DeFi, NFTs', auth_wallet:'Wallet (for payments)',
   auth_bio:'Bio', auth_bio_ph:'Tell us briefly about your content...', auth_create:'Create account',
   auth_add_net:'+ Add another network', auth_user_ph:'username or link', auth_followers_ph:'followers',
   auth_demo:'Demo: ',
-  admin_title:'Admin access', admin_sub:'Panel reserved for the Chuminicky team.',
+  admin_title:'Admin access', admin_sub:'Panel reserved for the DiamondWall team.',
   admin_email_label:'Admin email', admin_error:'Invalid admin credentials.', admin_enter:'Enter dashboard', admin_back:'Back to home',
   camp_eyebrow:'Open opportunities', camp_title:'Available campaigns',
   filter_all:'All', filter_active:'Active', filter_closed:'Closed',
   camp_active:'ACTIVE', camp_closed:'CLOSED', camp_no_results:'No campaigns here', camp_try_filter:'Try another filter.',
   camp_already:'Already applied', camp_apply:'Apply', camp_login_first:'Log in first',
+  camp_deliverables:'Required deliverables', camp_payment_info:'Payment details',
   apply_title:'Apply', apply_alias:'Alias: ', apply_niche:'Niche: ', apply_wallet:'Wallet: ',
   apply_info:'By applying, your application brief will be automatically created and visible to the admin team.',
   apply_confirm:'Confirm application',
@@ -328,24 +336,17 @@ const state = {
   secretClicks:0, secretClickTimer:null,
 
   users: [
-    {id:'u-admin', email:'admin@chuminicky.io', password:'admin123', rol:'admin', nombre_completo:'Equipo Chuminicky', estado:'activo'},
-    {id:'u-inf1', email:'laura@cripto.com', password:'1234', rol:'influencer', nombre_completo:'Laura Méndez', estado:'activo',
-      perfil:{alias:'@lauracripto', redes:[{plataforma:'twitter', url:'twitter.com/lauracripto', seguidores:48200}], nicho:'Cripto, DeFi', wallet:'0x8aF...3e21', bio:'Análisis cripto diario y educación financiera.'}}
+    {id:'u-admin', email:'diamondwallcoin@proton.me', password:'admin123', rol:'admin', nombre_completo:'DiamondWall Team', estado:'activo'}
   ],
   campañas: [
-    {id:'c1', titulo:{es:'Lanzamiento de Token — Hilo en X', en:'Token Launch — Thread on X'}, descripcion:{es:'Hilo de 5 tweets explicando el caso de uso del token y por qué importa. Incluir gráfica del roadmap.',en:'A 5-tweet thread explaining the token use case and why it matters. Include roadmap graphic.'}, plataforma:'Twitter/X', tipo:{es:'Hilo',en:'Thread'}, presupuesto:350, moneda:'USDT', requisitos:{es:'Mínimo 10.000 seguidores, nicho cripto/finanzas',en:'Min 10,000 followers, crypto/finance niche'}, fecha_limite:'2026-07-15', estado:'activa', creado_por:'u-admin'},
-    {id:'c2', titulo:{es:'Reseña en Video — Wallet Integration',en:'Video Review — Wallet Integration'}, descripcion:{es:'Video corto (60-90s) mostrando cómo conectar la wallet y hacer el primer swap en la dApp.',en:'Short video (60-90s) showing how to connect the wallet and make the first swap on the dApp.'}, plataforma:'TikTok', tipo:'Video', presupuesto:500, moneda:'USDT', requisitos:{es:'Mínimo 20.000 seguidores, contenido tech/cripto',en:'Min 20,000 followers, tech/crypto content'}, fecha_limite:'2026-07-20', estado:'activa', creado_por:'u-admin'},
-    {id:'c3', titulo:{es:'Story Promocional — Whitelist',en:'Promo Story — Whitelist'}, descripcion:{es:'Story de Instagram anunciando apertura de whitelist con link de registro y countdown.',en:'Instagram story announcing whitelist opening with registration link and countdown.'}, plataforma:'Instagram', tipo:'Story', presupuesto:120, moneda:'USDT', requisitos:{es:'Mínimo 5.000 seguidores',en:'Min 5,000 followers'}, fecha_limite:'2026-06-30', estado:'activa', creado_por:'u-admin'},
-    {id:'c4', titulo:{es:'Cobertura AMA — YouTube',en:'AMA Coverage — YouTube'}, descripcion:{es:'Cobertura en vivo del AMA del equipo fundador, con resumen posterior en comunidad.',en:'Live coverage of the founding team AMA, with follow-up community summary.'}, plataforma:'YouTube', tipo:{es:'Live + Resumen',en:'Live + Summary'}, presupuesto:800, moneda:'USDT', requisitos:{es:'Canal activo, mínimo 15.000 suscriptores',en:'Active channel, min 15,000 subscribers'}, fecha_limite:'2026-06-25', estado:'cerrada', creado_por:'u-admin'}
+    {id:'c1', titulo:{es:'Pre-lanzamiento $DWALL — Campaña de awareness en X',en:'$DWALL Pre-launch — Awareness Campaign on X'}, descripcion:{es:'Campaña de difusión pre-lanzamiento en BSC Mainnet. Mínimo 5 posts en X (Twitter) sobre DiamondWall: qué es, cómo funciona el rendimiento real via Venus Protocol, smart contracts auditados (412 tests, 0 vulnerabilidades), supply fijo y 0% fee. Etiquetar @diamondwallcoin, usar #DWALL #BSC #DeFi e incluir link del proyecto en al menos 2 posts.',en:'Pre-launch awareness campaign before BSC Mainnet. Minimum 5 posts on X (Twitter) about DiamondWall: what it is, how real yield works via Venus Protocol, audited smart contracts (412 tests, 0 vulnerabilities), fixed supply and 0% fee. Tag @diamondwallcoin, use #DWALL #BSC #DeFi and include project link in at least 2 posts.'}, plataforma:'X (Twitter)', tipo:{es:'Posts + Hilos',en:'Posts + Threads'}, presupuesto:100, moneda:'$DWALL', requisitos:{es:'Nicho cripto/DeFi/BSC, contenido en inglés o español, cuenta activa en X',en:'Crypto/DeFi/BSC niche, English or Spanish content, active X account'}, fecha_limite:'2026-08-15', estado:'activa', creado_por:'u-admin',
+      links:{web:'https://diamondwall.vercel.app', audit:'https://github.com/PRBx77/diamondwall-audit', twitter:'https://x.com/diamondwallcoin', github:'https://github.com/PRBx77/diamondwall-frontend'},
+      entregables:{es:'• Mínimo 5 posts sobre $DWALL en X\n• Etiquetar @diamondwallcoin en todos\n• Hashtags: #DWALL #BSC #DeFi\n• Link del proyecto en al menos 2 posts',en:'• Minimum 5 posts about $DWALL on X\n• Tag @diamondwallcoin in all posts\n• Hashtags: #DWALL #BSC #DeFi\n• Include project link in at least 2 posts'},
+      pago_info:{es:'Pago en $DWALL tokens tras despliegue en BSC Mainnet. Monto calculado a precio de mercado. Transferencia on-chain verificable.',en:'Payment in $DWALL tokens after BSC Mainnet deployment. Amount calculated at market price. Verifiable on-chain transfer.'}
+    }
   ],
-  postulaciones: [
-    {id:'p1', campaña_id:'c1', influencer_id:'u-inf1', estado:'aprobada', fecha_postulacion:'2026-06-10', link_contenido:'', comentario_admin:'Perfil encaja perfecto con la campaña.'}
-  ],
-  mensajes: [
-    {id:'m1', postulacion_id:'p1', de:'u-admin', texto:'¡Hola Laura! Bienvenida a la campaña del lanzamiento del token 🎉', hora:'10:02'},
-    {id:'m2', postulacion_id:'p1', de:'u-inf1', texto:'¡Hola! Gracias, ya estoy preparando el hilo. ¿Tienen el deck con los datos del roadmap?', hora:'10:05'},
-    {id:'m3', postulacion_id:'p1', de:'u-admin', texto:'Sí, te lo paso por aquí en un momento. También recuerda mencionar el contrato auditado.', hora:'10:07'}
-  ],
+  postulaciones: [],
+  mensajes: [],
 };
 
 function uid(p){return p+'-'+Math.random().toString(36).slice(2,9);}
@@ -490,7 +491,6 @@ function Auth(){
       if(!u){go('auth',{formError:t('auth_error_creds')});return;}
       state.currentUser=u;go('dashboard');
     }},[t('auth_login')]));
-    c.appendChild(el('div',{class:'auth-foot'},[t('auth_demo'),el('span',{style:'font-family:var(--font-mono);color:var(--white);'},['laura@cripto.com / 1234'])]));
   } else {
     c.appendChild(el('h2',{class:'auth-title'},[t('auth_join')]));
     c.appendChild(el('p',{class:'auth-sub'},[t('auth_join_sub')]));
@@ -540,7 +540,7 @@ function AdminAuth(){
   c.appendChild(el('h2',{class:'auth-title',style:'text-align:center;'},[t('admin_title')]));
   c.appendChild(el('p',{class:'auth-sub',style:'text-align:center;'},[t('admin_sub')]));
   if(state.formError) c.appendChild(el('div',{class:'auth-error'},[state.formError]));
-  const eF=fi(t('admin_email_label'),'a-e','email','admin@chuminicky.io'),pF=fi(t('auth_pass'),'a-p','password','••••••••');
+  const eF=fi(t('admin_email_label'),'a-e','email','diamondwallcoin@proton.me'),pF=fi(t('auth_pass'),'a-p','password','••••••••');
   c.appendChild(eF.wrap);c.appendChild(pF.wrap);
   c.appendChild(el('button',{class:'btn btn-violet',style:'width:100%;margin-top:6px;',onclick:()=>{
     const em=eF.input.value.trim().toLowerCase(),pw=pF.input.value;
@@ -577,6 +577,26 @@ function campCard(c){
   cd.appendChild(el('div',{class:'camp-top'},[el('div',{class:'camp-title'},[lt(c.titulo)]),el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]));
   cd.appendChild(el('p',{class:'camp-desc'},[lt(c.descripcion)]));
   cd.appendChild(el('div',{class:'camp-meta'},[el('span',{class:'meta-tag'},[c.plataforma]),el('span',{class:'meta-tag'},[lt(c.tipo)]),el('span',{class:'meta-tag'},[lt(c.requisitos).split(',')[0]])]));
+  if(c.links){
+    const lnk=el('div',{class:'camp-links'});
+    if(c.links.web) lnk.appendChild(el('a',{href:c.links.web,target:'_blank',class:'camp-link'},['🌐 Web']));
+    if(c.links.audit) lnk.appendChild(el('a',{href:c.links.audit,target:'_blank',class:'camp-link'},['📂 Audit']));
+    if(c.links.twitter) lnk.appendChild(el('a',{href:c.links.twitter,target:'_blank',class:'camp-link'},['🐦 X/Twitter']));
+    if(c.links.github) lnk.appendChild(el('a',{href:c.links.github,target:'_blank',class:'camp-link'},['💻 GitHub']));
+    cd.appendChild(lnk);
+  }
+  if(c.entregables){
+    cd.appendChild(el('div',{class:'camp-deliverables'},[
+      el('div',{class:'cdl-title'},[t('camp_deliverables')]),
+      el('div',{class:'cdl-text',html:lt(c.entregables).replace(/\n/g,'<br>')})
+    ]));
+  }
+  if(c.pago_info){
+    cd.appendChild(el('div',{class:'camp-pago-info'},[
+      el('div',{class:'cdl-title'},[t('camp_payment_info')]),
+      el('div',{class:'cdl-text'},[lt(c.pago_info)])
+    ]));
+  }
   const pr=el('div',{class:'camp-pay'},[el('div',{},[el('div',{class:'pay-amt'},[c.presupuesto+' '+c.moneda]),el('div',{class:'pay-deadline'},[t('closes')+' '+c.fecha_limite])])]);
   if(c.estado==='activa'){
     if(state.currentUser&&state.currentUser.rol==='influencer'){
@@ -736,7 +756,7 @@ function Chat(){
     wn.appendChild(el('div',{class:'chat-empty'},[el('div',{style:'font-size:28px;'},['💬']),el('div',{},[t('chat_select')])]));
   } else {
     const camp=state.campañas.find(c=>c.id===ap.campaña_id),inf=state.users.find(u=>u.id===ap.influencer_id);
-    wn.appendChild(el('div',{class:'chat-header'},[el('div',{},[el('h3',{},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')+' · Chuminicky']),el('div',{class:'sub'},[camp?lt(camp.titulo):''])]),el('span',{class:'status-pill status-'+ap.estado},[statusT(ap.estado)])]));
+    wn.appendChild(el('div',{class:'chat-header'},[el('div',{},[el('h3',{},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')+' · DiamondWall']),el('div',{class:'sub'},[camp?lt(camp.titulo):''])]),el('span',{class:'status-pill status-'+ap.estado},[statusT(ap.estado)])]));
     const mw=el('div',{class:'chat-msgs',id:'chat-msgs-scroll'});
     state.mensajes.filter(mm=>mm.postulacion_id===ap.id).forEach(mm=>{
       const mine=mm.de===state.currentUser.id;
