@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chuminicky Publiciters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0F19;--ink-2:#11172A;--panel:#161D33;--line:#272F4A;
+    --violet:#7C5CFF;--violet-dim:#5A3FE0;--lime:#C8FF4D;--white:#F5F3EE;
+    --slate:#8A8FA3;--coral:#FF6B5E;
+    --font-display:'Space Grotesk',sans-serif;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--ink);color:var(--white);font-family:var(--font-body);scroll-behavior:smooth;}
+  ::selection{background:var(--violet);color:var(--white);}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  :focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
+  .app{min-height:100vh;display:flex;flex-direction:column;}
+
+  header.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:rgba(11,15,25,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;}
+  .logo .mark{width:10px;height:10px;background:var(--lime);display:inline-block;border-radius:2px;transform:rotate(45deg);transition:.15s;cursor:pointer;}
+  .logo .mark:active{transform:rotate(45deg) scale(0.8);}
+  .logo .word{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-0.02em;}
+  .logo .word span{color:var(--lime);}
+  nav.links{display:flex;gap:28px;align-items:center;}
+  nav.links button.navbtn{background:none;border:none;color:var(--slate);font-size:14px;font-weight:500;padding:6px 0;border-bottom:2px solid transparent;transition:.15s;}
+  nav.links button.navbtn:hover,nav.links button.navbtn.active{color:var(--white);border-color:var(--lime);}
+  .nav-actions{display:flex;gap:10px;align-items:center;}
+  .pill{font-family:var(--font-mono);font-size:11px;color:var(--slate);background:var(--panel);border:1px solid var(--line);padding:5px 10px;border-radius:20px;}
+  .lang-btn{font-family:var(--font-mono);font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel);color:var(--lime);cursor:pointer;font-weight:600;transition:.15s;}
+  .lang-btn:hover{border-color:var(--lime);}
+  .btn{font-family:var(--font-body);font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:8px;border:1px solid transparent;transition:.15s;}
+  .btn-primary{background:var(--lime);color:var(--ink);}
+  .btn-primary:hover{background:#d8ff7a;}
+  .btn-ghost{background:transparent;color:var(--white);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--violet);color:var(--violet);}
+  .btn-violet{background:var(--violet);color:var(--white);}
+  .btn-violet:hover{background:var(--violet-dim);}
+  .btn-sm{padding:7px 12px;font-size:12.5px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  main{flex:1;}
+
+  .burger{display:none;background:none;border:1px solid var(--line);color:var(--white);border-radius:8px;padding:9px 11px;font-size:16px;line-height:1;}
+  .mobile-menu{display:none;flex-direction:column;gap:2px;padding:10px 16px 16px;border-bottom:1px solid var(--line);background:var(--ink-2);}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu button{background:none;border:none;color:var(--slate);text-align:left;padding:10px 4px;font-size:14px;font-weight:500;border-bottom:1px solid var(--line);}
+  .mobile-menu button:last-child{border-bottom:none;}
+  .mobile-menu button.active{color:var(--lime);}
+
+  .ticker-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink-2);overflow:hidden;white-space:nowrap;position:relative;}
+  .ticker-wrap::before,.ticker-wrap::after{content:"";position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;}
+  .ticker-wrap::before{left:0;background:linear-gradient(90deg,var(--ink-2),transparent);}
+  .ticker-wrap::after{right:0;background:linear-gradient(270deg,var(--ink-2),transparent);}
+  .ticker{display:inline-flex;animation:scroll 38s linear infinite;padding:12px 0;}
+  .ticker:hover{animation-play-state:paused;}
+  @keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+  .tick-item{font-family:var(--font-mono);font-size:12.5px;color:var(--slate);padding:0 28px;display:inline-flex;gap:8px;align-items:center;}
+  .tick-item b{color:var(--lime);font-weight:600;}
+  .tick-item .dot{width:5px;height:5px;border-radius:50%;background:var(--violet);}
+
+  .hero{padding:96px 32px 64px;max-width:1080px;margin:0 auto;text-align:left;}
+  .eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--violet);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--violet);}
+  h1.hero-title{font-family:var(--font-display);font-weight:700;font-size:clamp(40px,6vw,72px);line-height:1.02;letter-spacing:-0.03em;max-width:880px;}
+  h1.hero-title .accent{color:var(--lime);}
+  p.hero-sub{font-size:17px;color:var(--slate);max-width:560px;margin-top:24px;line-height:1.6;}
+  .hero-cta{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;}
+  .hero-stats{display:flex;gap:48px;margin-top:72px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px;}
+  .stat .num{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--white);}
+  .stat .lbl{font-family:var(--font-mono);font-size:11.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
+
+  .section{padding:80px 32px;max-width:1080px;margin:0 auto;}
+  .section-head{margin-bottom:48px;}
+  .section-head .eyebrow{margin-bottom:14px;}
+  h2.section-title{font-family:var(--font-display);font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-0.02em;}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .flow-step{background:var(--ink-2);padding:28px 22px;position:relative;}
+  .flow-step .fnum{font-family:var(--font-mono);font-size:11px;color:var(--violet);margin-bottom:14px;}
+  .flow-step h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:10px;}
+  .flow-step p{font-size:13.5px;color:var(--slate);line-height:1.55;}
+  @media(max-width:900px){.flow{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.flow{grid-template-columns:1fr;}}
+
+  .auth-wrap{max-width:440px;margin:64px auto;padding:0 24px;}
+  .auth-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:36px;}
+  .auth-tabs{display:flex;gap:0;margin-bottom:28px;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;background:transparent;border:none;color:var(--slate);}
+  .auth-tab.active{background:var(--violet);color:var(--white);}
+  h2.auth-title{font-family:var(--font-display);font-size:24px;margin-bottom:6px;}
+  p.auth-sub{font-size:13.5px;color:var(--slate);margin-bottom:26px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:7px;color:var(--white);}
+  .field input,.field select,.field textarea{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--white);padding:11px 13px;border-radius:8px;font-size:13.5px;font-family:var(--font-body);}
+  .field textarea{resize:vertical;min-height:80px;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--violet);}
+  .auth-error{background:rgba(255,107,94,0.1);border:1px solid var(--coral);color:var(--coral);font-size:12.5px;padding:10px 12px;border-radius:7px;margin-bottom:16px;}
+  .auth-foot{margin-top:22px;text-align:center;font-size:12.5px;color:var(--slate);}
+  .auth-foot button{background:none;border:none;color:var(--lime);font-weight:600;font-size:12.5px;}
+  .net-row{display:grid;grid-template-columns:110px 1fr 90px;gap:8px;margin-bottom:8px;}
+  .net-row input,.net-row select{padding:9px 10px;font-size:12.5px;}
+  .add-net{background:none;border:1px dashed var(--line);color:var(--slate);width:100%;padding:8px;border-radius:7px;font-size:12px;margin-top:4px;}
+  .add-net:hover{border-color:var(--violet);color:var(--violet);}
+
+  .filters{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
+  .chip{font-family:var(--font-mono);font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:20px;color:var(--slate);background:var(--panel);cursor:pointer;}
+  .chip.on{border-color:var(--lime);color:var(--lime);}
+  .camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+  .camp-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:.15s;}
+  .camp-card:hover{border-color:var(--violet);}
+  .camp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .camp-title{font-family:var(--font-display);font-size:17px;font-weight:600;line-height:1.25;}
+  .badge{font-family:var(--font-mono);font-size:10.5px;padding:4px 9px;border-radius:20px;white-space:nowrap;}
+  .badge.activa{background:rgba(200,255,77,0.12);color:var(--lime);}
+  .badge.cerrada{background:rgba(138,143,163,0.15);color:var(--slate);}
+  .camp-desc{font-size:13px;color:var(--slate);line-height:1.55;flex:1;}
+  .camp-meta{display:flex;flex-wrap:wrap;gap:8px;}
+  .meta-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--white);background:var(--ink-2);border:1px solid var(--line);padding:4px 9px;border-radius:6px;}
+  .camp-pay{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;}
+  .pay-amt{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--lime);}
+  .pay-deadline{font-size:11px;color:var(--slate);font-family:var(--font-mono);}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(11,15,25,0.7);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;padding:32px;}
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+  .modal-close{background:none;border:none;color:var(--slate);font-size:20px;line-height:1;}
+  .modal-close:hover{color:var(--white);}
+
+  .dash{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+  .sidebar{border-right:1px solid var(--line);padding:28px 18px;background:var(--ink-2);}
+  .side-label{font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;padding:0 10px;margin:18px 0 8px;}
+  .side-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--slate);padding:10px 10px;border-radius:8px;font-size:13.5px;font-weight:500;margin-bottom:2px;}
+  .side-btn:hover{background:var(--panel);color:var(--white);}
+  .side-btn.active{background:rgba(124,92,255,0.15);color:var(--violet);}
+  .side-count{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;background:var(--line);padding:2px 7px;border-radius:10px;}
+  .dash-content{padding:32px 36px;overflow-x:hidden;}
+  .dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
+  .dash-head h2{font-family:var(--font-display);font-size:26px;}
+  table.tbl{width:100%;border-collapse:collapse;}
+  table.tbl th{text-align:left;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--slate);padding:10px 14px;border-bottom:1px solid var(--line);letter-spacing:.04em;}
+  table.tbl td{padding:14px;border-bottom:1px solid var(--line);font-size:13.5px;}
+  table.tbl tr:hover td{background:rgba(124,92,255,0.04);}
+  .status-pill{font-family:var(--font-mono);font-size:10.5px;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .status-pendiente{background:rgba(255,193,7,0.12);color:#FFC107;}
+  .status-aprobada{background:rgba(200,255,77,0.12);color:var(--lime);}
+  .status-rechazada{background:rgba(255,107,94,0.12);color:var(--coral);}
+  .status-completada{background:rgba(124,92,255,0.15);color:var(--violet);}
+  .empty{text-align:center;padding:60px 20px;color:var(--slate);}
+  .empty .eicon{font-size:32px;margin-bottom:14px;}
+  .empty h3{font-family:var(--font-display);color:var(--white);margin-bottom:8px;font-size:16px;}
+  .empty p{font-size:13px;max-width:320px;margin:0 auto;}
+
+  .chat-layout{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 64px - 56px);}
+  .chat-list{border-right:1px solid var(--line);overflow-y:auto;background:var(--ink-2);}
+  .chat-list-item{padding:16px 18px;border-bottom:1px solid var(--line);cursor:pointer;}
+  .chat-list-item:hover,.chat-list-item.active{background:var(--panel);}
+  .cli-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;}
+  .cli-camp{font-size:11.5px;color:var(--violet);font-family:var(--font-mono);margin-bottom:4px;}
+  .cli-preview{font-size:12px;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chat-window{display:flex;flex-direction:column;}
+  .chat-header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .chat-header h3{font-family:var(--font-display);font-size:16px;}
+  .chat-header .sub{font-size:11.5px;color:var(--slate);font-family:var(--font-mono);margin-top:2px;}
+  .chat-msgs{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:14px;}
+  .msg{max-width:62%;padding:11px 15px;border-radius:12px;font-size:13.5px;line-height:1.5;}
+  .msg.in{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:3px;}
+  .msg.out{align-self:flex-end;background:var(--violet);color:var(--white);border-bottom-right-radius:3px;}
+  .msg .mt{font-family:var(--font-mono);font-size:10px;opacity:.6;margin-top:6px;display:block;}
+  .chat-input{display:flex;gap:10px;padding:18px 24px;border-top:1px solid var(--line);}
+  .chat-input input{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--white);padding:12px 14px;border-radius:9px;font-size:13.5px;}
+  .chat-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--slate);font-size:13.5px;flex-direction:column;gap:10px;}
+
+  footer{border-top:1px solid var(--line);padding:28px 32px;text-align:center;font-size:12px;color:var(--slate);font-family:var(--font-mono);}
+
+  @media(max-width:860px){
+    .dash{grid-template-columns:1fr;}
+    .sidebar{display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding:14px;}
+    .side-section{display:flex;gap:6px;}
+    .side-label{display:none;}
+    .chat-layout{grid-template-columns:1fr;}
+    .chat-list{display:none;}
+    nav.links{display:none;}
+    .burger{display:inline-block;}
+    .hero-stats{gap:28px;}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* =========================================================
+   i18n — TRADUCCIONES
+   ========================================================= */
+const i18n = {
+es: {
+  nav_home:'Inicio', nav_campaigns:'Campañas', nav_panel:'Panel', nav_messages:'Mensajes',
+  nav_login:'Iniciar sesión', nav_register:'Registrarse', nav_logout:'Cerrar sesión',
+  role_influencer:'INFLUENCER',
+  hero_eyebrow:'Marketing de influencers para proyectos cripto',
+  hero_title:'El canal donde tu proyecto y los <span class="accent">influencers</span> cierran campañas, sin ruido.',
+  hero_sub:'Chuminicky Publiciters conecta proyectos cripto con creadores de contenido reales. Publica campañas, recibe postulaciones, y gestiona todo — desde la ficha hasta el pago — en un único canal de mensajería interna.',
+  hero_cta_campaigns:'Ver campañas activas', hero_cta_register:'Registrarme como influencer',
+  stat_active:'Campañas activas', stat_influencers:'Influencers registrados', stat_channel:'Canal de mensajería por campaña',
+  how_eyebrow:'Cómo funciona', how_title:'De la postulación al pago, en un solo lugar',
+  flow1_t:'El admin publica', flow1_d:'Se crea una campaña con presupuesto, plataforma, requisitos y fecha límite.',
+  flow2_t:'El influencer se postula', flow2_d:'Completa su ficha (redes, nicho, wallet) y aplica a la campaña que le interesa.',
+  flow3_t:'Se genera la ficha', flow3_d:'Automáticamente queda registrada la postulación, lista para revisión del admin.',
+  flow4_t:'Chat directo', flow4_d:'Influencer y admin coordinan detalles, entregables y pago en su canal privado.',
+  why_eyebrow:'Propósito', why_title:'Por qué existe esta plataforma',
+  why_text:'Chuminicky Publiciters nace para ordenar el marketing de influencers de nuestro proyecto cripto: en lugar de coordinar campañas por DMs sueltos y hojas de cálculo, cada campaña tiene su propia ficha, su propio historial y su propio canal de chat directo con el equipo. Así, tanto el influencer como el admin saben siempre en qué punto está cada colaboración.',
+  footer:'CHUMINICKY PUBLICITERS © 2026 — CANAL OFICIAL DE CAMPAÑAS Y COMUNICACIÓN CON INFLUENCERS',
+  closes:'cierra',
+  // Auth
+  auth_login:'Iniciar sesión', auth_register:'Registro nuevo',
+  auth_welcome:'Bienvenido de nuevo', auth_welcome_sub:'Accede con tu cuenta de influencer.',
+  auth_email:'Email', auth_pass:'Contraseña', auth_name:'Nombre completo',
+  auth_error_creds:'Email o contraseña incorrectos.', auth_error_fields:'Completa nombre, email y una contraseña de al menos 4 caracteres.',
+  auth_error_exists:'Ya existe una cuenta con ese email.',
+  auth_join:'Únete como influencer', auth_join_sub:'Regístrate para ver y postularte a campañas de marketing cripto.',
+  auth_profile_data:'Datos de perfil', auth_alias:'Alias / nombre público', auth_social:'Redes sociales',
+  auth_niche:'Nicho', auth_niche_ph:'Ej: Cripto, DeFi, NFTs', auth_wallet:'Wallet (para pagos)',
+  auth_bio:'Bio', auth_bio_ph:'Cuéntanos brevemente sobre tu contenido...', auth_create:'Crear cuenta',
+  auth_add_net:'+ Añadir otra red', auth_user_ph:'usuario o link', auth_followers_ph:'seguidores',
+  auth_demo:'Demo: ',
+  // Admin auth
+  admin_title:'Acceso administrador', admin_sub:'Panel reservado para el equipo Chuminicky.',
+  admin_email_label:'Email admin', admin_error:'Credenciales de admin incorrectas.', admin_enter:'Entrar al panel', admin_back:'Volver al inicio',
+  // Campaigns
+  camp_eyebrow:'Oportunidades abiertas', camp_title:'Campañas ofertadas',
+  filter_all:'Todas', filter_active:'Activas', filter_closed:'Cerradas',
+  camp_active:'ACTIVA', camp_closed:'CERRADA', camp_no_results:'No hay campañas aquí', camp_try_filter:'Prueba con otro filtro.',
+  camp_already:'Ya postulado', camp_apply:'Postularme', camp_login_first:'Inicia sesión',
+  // Apply modal
+  apply_title:'Postularme', apply_alias:'Alias: ', apply_niche:'Nicho: ', apply_wallet:'Wallet: ',
+  apply_info:'Al postularte se generará automáticamente tu ficha de postulación, visible para el equipo admin.',
+  apply_confirm:'Confirmar postulación',
+  apply_auto_msg:'¡Hola! Recibimos tu postulación a "{title}". La estamos revisando.',
+  // Dashboard
+  dash_panel:'Panel',
+  dash_campaigns:'Campañas', dash_applications:'Postulaciones', dash_influencers:'Influencers',
+  dash_my_apps:'Mis postulaciones', dash_my_profile:'Mi perfil',
+  dash_total:'total', dash_approve:'Aprobar', dash_reject:'Rechazar',
+  tbl_title:'Título', tbl_platform:'Plataforma', tbl_pay:'Pago', tbl_status:'Estado', tbl_apps:'Postulaciones',
+  tbl_influencer:'Influencer', tbl_campaign:'Campaña', tbl_date:'Fecha', tbl_actions:'Acciones',
+  tbl_alias:'Alias', tbl_email:'Email', tbl_niche:'Nicho', tbl_social:'Redes', tbl_wallet:'Wallet',
+  tbl_deadline:'Pago',
+  empty_apps_title:'Aún no hay postulaciones', empty_apps_text:'Aparecerán aquí cuando un influencer se postule a una campaña.',
+  empty_myapps_title:'Aún no te has postulado a ninguna campaña', empty_myapps_text:'Ve a Campañas y postúlate a la que te interese.',
+  empty_myapps_cta:'Ver campañas',
+  profile_followers:'seg.',
+  // Chat
+  chat_no_convos:'No tienes conversaciones activas todavía.',
+  chat_team:'Equipo Admin', chat_select:'Selecciona una conversación para empezar a chatear',
+  chat_placeholder:'Escribe un mensaje...', chat_send:'Enviar', chat_no_msgs:'Sin mensajes aún',
+  // Statuses
+  status_pendiente:'pendiente', status_aprobada:'aprobada', status_rechazada:'rechazada', status_completada:'completada',
+},
+en: {
+  nav_home:'Home', nav_campaigns:'Campaigns', nav_panel:'Dashboard', nav_messages:'Messages',
+  nav_login:'Log in', nav_register:'Sign up', nav_logout:'Log out',
+  role_influencer:'INFLUENCER',
+  hero_eyebrow:'Influencer marketing for crypto projects',
+  hero_title:'The channel where your project and <span class="accent">influencers</span> close campaigns, no noise.',
+  hero_sub:'Chuminicky Publiciters connects crypto projects with real content creators. Publish campaigns, receive applications, and manage everything — from the brief to payment — in a single internal messaging channel.',
+  hero_cta_campaigns:'View active campaigns', hero_cta_register:'Register as influencer',
+  stat_active:'Active campaigns', stat_influencers:'Registered influencers', stat_channel:'Messaging channel per campaign',
+  how_eyebrow:'How it works', how_title:'From application to payment, all in one place',
+  flow1_t:'Admin publishes', flow1_d:'A campaign is created with budget, platform, requirements and deadline.',
+  flow2_t:'Influencer applies', flow2_d:'Fills out their profile (socials, niche, wallet) and applies to the campaign.',
+  flow3_t:'Brief is generated', flow3_d:'The application is automatically registered and ready for admin review.',
+  flow4_t:'Direct chat', flow4_d:'Influencer and admin coordinate details, deliverables and payment in their private channel.',
+  why_eyebrow:'Purpose', why_title:'Why this platform exists',
+  why_text:'Chuminicky Publiciters was built to streamline influencer marketing for our crypto project: instead of coordinating campaigns through scattered DMs and spreadsheets, each campaign has its own brief, its own history, and its own direct chat channel with the team. This way, both the influencer and admin always know exactly where each collaboration stands.',
+  footer:'CHUMINICKY PUBLICITERS © 2026 — OFFICIAL CAMPAIGN & INFLUENCER COMMUNICATION CHANNEL',
+  closes:'closes',
+  auth_login:'Log in', auth_register:'Sign up',
+  auth_welcome:'Welcome back', auth_welcome_sub:'Access with your influencer account.',
+  auth_email:'Email', auth_pass:'Password', auth_name:'Full name',
+  auth_error_creds:'Incorrect email or password.', auth_error_fields:'Please fill in name, email and a password of at least 4 characters.',
+  auth_error_exists:'An account with this email already exists.',
+  auth_join:'Join as influencer', auth_join_sub:'Sign up to view and apply to crypto marketing campaigns.',
+  auth_profile_data:'Profile details', auth_alias:'Alias / public name', auth_social:'Social media',
+  auth_niche:'Niche', auth_niche_ph:'E.g.: Crypto, DeFi, NFTs', auth_wallet:'Wallet (for payments)',
+  auth_bio:'Bio', auth_bio_ph:'Tell us briefly about your content...', auth_create:'Create account',
+  auth_add_net:'+ Add another network', auth_user_ph:'username or link', auth_followers_ph:'followers',
+  auth_demo:'Demo: ',
+  admin_title:'Admin access', admin_sub:'Panel reserved for the Chuminicky team.',
+  admin_email_label:'Admin email', admin_error:'Invalid admin credentials.', admin_enter:'Enter dashboard', admin_back:'Back to home',
+  camp_eyebrow:'Open opportunities', camp_title:'Available campaigns',
+  filter_all:'All', filter_active:'Active', filter_closed:'Closed',
+  camp_active:'ACTIVE', camp_closed:'CLOSED', camp_no_results:'No campaigns here', camp_try_filter:'Try another filter.',
+  camp_already:'Already applied', camp_apply:'Apply', camp_login_first:'Log in first',
+  apply_title:'Apply', apply_alias:'Alias: ', apply_niche:'Niche: ', apply_wallet:'Wallet: ',
+  apply_info:'By applying, your application brief will be automatically created and visible to the admin team.',
+  apply_confirm:'Confirm application',
+  apply_auto_msg:'Hi! We received your application for "{title}". We\'re reviewing it.',
+  dash_panel:'Dashboard',
+  dash_campaigns:'Campaigns', dash_applications:'Applications', dash_influencers:'Influencers',
+  dash_my_apps:'My applications', dash_my_profile:'My profile',
+  dash_total:'total', dash_approve:'Approve', dash_reject:'Reject',
+  tbl_title:'Title', tbl_platform:'Platform', tbl_pay:'Pay', tbl_status:'Status', tbl_apps:'Applications',
+  tbl_influencer:'Influencer', tbl_campaign:'Campaign', tbl_date:'Date', tbl_actions:'Actions',
+  tbl_alias:'Alias', tbl_email:'Email', tbl_niche:'Niche', tbl_social:'Socials', tbl_wallet:'Wallet',
+  tbl_deadline:'Pay',
+  empty_apps_title:'No applications yet', empty_apps_text:'They\'ll appear here once an influencer applies to a campaign.',
+  empty_myapps_title:'You haven\'t applied to any campaign yet', empty_myapps_text:'Go to Campaigns and apply to one you like.',
+  empty_myapps_cta:'View campaigns',
+  profile_followers:'fol.',
+  chat_no_convos:'You don\'t have active conversations yet.',
+  chat_team:'Admin Team', chat_select:'Select a conversation to start chatting',
+  chat_placeholder:'Write a message...', chat_send:'Send', chat_no_msgs:'No messages yet',
+  status_pendiente:'pending', status_aprobada:'approved', status_rechazada:'rejected', status_completada:'completed',
+}
+};
+function t(key){ return i18n[state.lang][key] || i18n['es'][key] || key; }
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+const state = {
+  view:'landing', authTab:'login', lang:'es',
+  currentUser:null, dashSection:'campañas', mobileMenuOpen:false,
+  activeChatId:null, campFilter:'todas', modal:null, formError:'',
+  secretClicks:0, secretClickTimer:null,
+
+  users: [
+    {id:'u-admin', email:'admin@chuminicky.io', password:'admin123', rol:'admin', nombre_completo:'Equipo Chuminicky', estado:'activo'},
+    {id:'u-inf1', email:'laura@cripto.com', password:'1234', rol:'influencer', nombre_completo:'Laura Méndez', estado:'activo',
+      perfil:{alias:'@lauracripto', redes:[{plataforma:'twitter', url:'twitter.com/lauracripto', seguidores:48200}], nicho:'Cripto, DeFi', wallet:'0x8aF...3e21', bio:'Análisis cripto diario y educación financiera.'}}
+  ],
+  campañas: [
+    {id:'c1', titulo:{es:'Lanzamiento de Token — Hilo en X', en:'Token Launch — Thread on X'}, descripcion:{es:'Hilo de 5 tweets explicando el caso de uso del token y por qué importa. Incluir gráfica del roadmap.',en:'A 5-tweet thread explaining the token use case and why it matters. Include roadmap graphic.'}, plataforma:'Twitter/X', tipo:{es:'Hilo',en:'Thread'}, presupuesto:350, moneda:'USDT', requisitos:{es:'Mínimo 10.000 seguidores, nicho cripto/finanzas',en:'Min 10,000 followers, crypto/finance niche'}, fecha_limite:'2026-07-15', estado:'activa', creado_por:'u-admin'},
+    {id:'c2', titulo:{es:'Reseña en Video — Wallet Integration',en:'Video Review — Wallet Integration'}, descripcion:{es:'Video corto (60-90s) mostrando cómo conectar la wallet y hacer el primer swap en la dApp.',en:'Short video (60-90s) showing how to connect the wallet and make the first swap on the dApp.'}, plataforma:'TikTok', tipo:'Video', presupuesto:500, moneda:'USDT', requisitos:{es:'Mínimo 20.000 seguidores, contenido tech/cripto',en:'Min 20,000 followers, tech/crypto content'}, fecha_limite:'2026-07-20', estado:'activa', creado_por:'u-admin'},
+    {id:'c3', titulo:{es:'Story Promocional — Whitelist',en:'Promo Story — Whitelist'}, descripcion:{es:'Story de Instagram anunciando apertura de whitelist con link de registro y countdown.',en:'Instagram story announcing whitelist opening with registration link and countdown.'}, plataforma:'Instagram', tipo:'Story', presupuesto:120, moneda:'USDT', requisitos:{es:'Mínimo 5.000 seguidores',en:'Min 5,000 followers'}, fecha_limite:'2026-06-30', estado:'activa', creado_por:'u-admin'},
+    {id:'c4', titulo:{es:'Cobertura AMA — YouTube',en:'AMA Coverage — YouTube'}, descripcion:{es:'Cobertura en vivo del AMA del equipo fundador, con resumen posterior en comunidad.',en:'Live coverage of the founding team AMA, with follow-up community summary.'}, plataforma:'YouTube', tipo:{es:'Live + Resumen',en:'Live + Summary'}, presupuesto:800, moneda:'USDT', requisitos:{es:'Canal activo, mínimo 15.000 suscriptores',en:'Active channel, min 15,000 subscribers'}, fecha_limite:'2026-06-25', estado:'cerrada', creado_por:'u-admin'}
+  ],
+  postulaciones: [
+    {id:'p1', campaña_id:'c1', influencer_id:'u-inf1', estado:'aprobada', fecha_postulacion:'2026-06-10', link_contenido:'', comentario_admin:'Perfil encaja perfecto con la campaña.'}
+  ],
+  mensajes: [
+    {id:'m1', postulacion_id:'p1', de:'u-admin', texto:'¡Hola Laura! Bienvenida a la campaña del lanzamiento del token 🎉', hora:'10:02'},
+    {id:'m2', postulacion_id:'p1', de:'u-inf1', texto:'¡Hola! Gracias, ya estoy preparando el hilo. ¿Tienen el deck con los datos del roadmap?', hora:'10:05'},
+    {id:'m3', postulacion_id:'p1', de:'u-admin', texto:'Sí, te lo paso por aquí en un momento. También recuerda mencionar el contrato auditado.', hora:'10:07'}
+  ],
+};
+
+function uid(p){return p+'-'+Math.random().toString(36).slice(2,9);}
+function lt(v){return typeof v==='object'&&v!==null&&(v.es||v.en)? (v[state.lang]||v.es||v.en) : v;}
+function secretAdminClick(){
+  state.secretClicks++;
+  clearTimeout(state.secretClickTimer);
+  state.secretClickTimer=setTimeout(()=>{state.secretClicks=0;},1200);
+  if(state.secretClicks>=5){ state.secretClicks=0; state.currentUser&&state.currentUser.rol==='admin'?go('dashboard'):go('admin_auth',{formError:''}); }
+}
+function render(){root.innerHTML='';root.appendChild(View[state.view]());}
+function go(view,extra){Object.assign(state,extra||{});state.view=view;render();window.scrollTo(0,0);}
+const root=document.getElementById('root');
+function el(tag,attrs,children){
+  const e=document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    if(k==='class') e.className=attrs[k];
+    else if(k.startsWith('on')) e.addEventListener(k.slice(2),attrs[k]);
+    else if(k==='html') e.innerHTML=attrs[k];
+    else e.setAttribute(k,attrs[k]);
+  }
+  (children||[]).forEach(c=>{if(c) e.appendChild(typeof c==='string'?document.createTextNode(c):c);});
+  return e;
+}
+function statusT(s){return t('status_'+s);}
+
+/* =========================================================
+   NAV + FOOTER
+   ========================================================= */
+function Nav(){
+  const hw=el('div');
+  const wrap=el('header',{class:'nav'});
+  const logo=el('div',{class:'logo',onclick:()=>go('landing')},[
+    el('span',{class:'mark',title:'',onclick:e=>{e.stopPropagation();secretAdminClick();}}),
+    el('span',{class:'word',html:'Chuminicky <span>Publiciters</span>'})
+  ]);
+  wrap.appendChild(logo);
+
+  const navItems=[[t('nav_home'),'landing'],[t('nav_campaigns'),'campaigns']];
+  if(state.currentUser){navItems.push([t('nav_panel'),'dashboard']);navItems.push([t('nav_messages'),'chat']);}
+
+  const links=el('nav',{class:'links'});
+  navItems.forEach(([label,v])=>{links.appendChild(el('button',{class:'navbtn'+(state.view===v?' active':''),onclick:()=>go(v)},[label]));});
+  wrap.appendChild(links);
+
+  const actions=el('div',{class:'nav-actions'});
+  // Language toggle
+  actions.appendChild(el('button',{class:'lang-btn',onclick:()=>{state.lang=state.lang==='es'?'en':'es';render();}},[state.lang==='es'?'EN':'ES']));
+  actions.appendChild(el('button',{class:'burger','aria-label':'Menu',onclick:()=>{state.mobileMenuOpen=!state.mobileMenuOpen;render();}},[state.mobileMenuOpen?'✕':'☰']));
+  if(state.currentUser){
+    if(state.currentUser.rol!=='admin') actions.appendChild(el('span',{class:'pill'},[t('role_influencer')]));
+    actions.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>{state.currentUser=null;go('landing');}},[t('nav_logout')]));
+  } else {
+    actions.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'login'})},[t('nav_login')]));
+    actions.appendChild(el('button',{class:'btn btn-primary btn-sm',onclick:()=>go('auth',{authTab:'register'})},[t('nav_register')]));
+  }
+  wrap.appendChild(actions);
+  hw.appendChild(wrap);
+
+  if(state.mobileMenuOpen){
+    const mm=el('div',{class:'mobile-menu open'});
+    navItems.forEach(([label,v])=>{mm.appendChild(el('button',{class:state.view===v?'active':'',onclick:()=>{state.mobileMenuOpen=false;go(v);}},[label]));});
+    if(!state.currentUser){
+      mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'login'});}},[t('nav_login')]));
+      mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'register'});}},[t('nav_register')]));
+    } else {
+      mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;state.currentUser=null;go('landing');}},[t('nav_logout')]));
+    }
+    hw.appendChild(mm);
+  }
+  return hw;
+}
+function Footer(){return el('footer',{},[t('footer')]);}
+function Ticker(){
+  const items=state.campañas.filter(c=>c.estado==='activa').map(c=>
+    `<div class="tick-item"><span class="dot"></span><b>${lt(c.titulo).toUpperCase()}</b> · ${c.plataforma} · ${c.presupuesto} ${c.moneda} · ${t('closes')} ${c.fecha_limite}</div>`
+  ).join('');
+  const w=el('div',{class:'ticker-wrap'});
+  w.innerHTML=`<div class="ticker">${items}${items}</div>`;
+  return w;
+}
+
+/* =========================================================
+   LANDING
+   ========================================================= */
+function Landing(){
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const m=el('main');
+  m.appendChild(el('div',{class:'hero'},[
+    el('div',{class:'eyebrow'},[t('hero_eyebrow')]),
+    el('h1',{class:'hero-title',html:t('hero_title')}),
+    el('p',{class:'hero-sub'},[t('hero_sub')]),
+    el('div',{class:'hero-cta'},[
+      el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('hero_cta_campaigns')]),
+      el('button',{class:'btn btn-ghost',onclick:()=>go('auth',{authTab:'register'})},[t('hero_cta_register')])
+    ]),
+    el('div',{class:'hero-stats'},[
+      statB(state.campañas.filter(c=>c.estado==='activa').length+'',t('stat_active')),
+      statB(state.users.filter(u=>u.rol==='influencer').length+'',t('stat_influencers')),
+      statB('1',t('stat_channel'))
+    ])
+  ]));
+  m.appendChild(Ticker());
+  m.appendChild(el('div',{class:'section'},[
+    el('div',{class:'section-head'},[el('div',{class:'eyebrow'},[t('how_eyebrow')]),el('h2',{class:'section-title'},[t('how_title')])]),
+    flowSteps()
+  ]));
+  m.appendChild(el('div',{class:'section'},[
+    el('div',{class:'section-head'},[el('div',{class:'eyebrow'},[t('why_eyebrow')]),el('h2',{class:'section-title'},[t('why_title')])]),
+    el('p',{style:'color:var(--slate);max-width:640px;line-height:1.7;font-size:14.5px;'},[t('why_text')])
+  ]));
+  p.appendChild(m);p.appendChild(Footer());return p;
+}
+function statB(n,l){return el('div',{class:'stat'},[el('div',{class:'num'},[n]),el('div',{class:'lbl'},[l])]);}
+function flowSteps(){
+  const s=[['01',t('flow1_t'),t('flow1_d')],['02',t('flow2_t'),t('flow2_d')],['03',t('flow3_t'),t('flow3_d')],['04',t('flow4_t'),t('flow4_d')]];
+  const g=el('div',{class:'flow'});
+  s.forEach(([n,tt,d])=>{g.appendChild(el('div',{class:'flow-step'},[el('div',{class:'fnum'},[n]),el('h3',{},[tt]),el('p',{},[d])]));});
+  return g;
+}
+
+/* =========================================================
+   AUTH (INFLUENCER ONLY)
+   ========================================================= */
+function Auth(){
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card'});
+  const tabs=el('div',{class:'auth-tabs'});
+  tabs.appendChild(el('button',{class:'auth-tab'+(state.authTab==='login'?' active':''),onclick:()=>go('auth',{authTab:'login',formError:''})},[t('auth_login')]));
+  tabs.appendChild(el('button',{class:'auth-tab'+(state.authTab==='register'?' active':''),onclick:()=>go('auth',{authTab:'register',formError:''})},[t('auth_register')]));
+  c.appendChild(tabs);
+
+  if(state.authTab==='login'){
+    c.appendChild(el('h2',{class:'auth-title'},[t('auth_welcome')]));
+    c.appendChild(el('p',{class:'auth-sub'},[t('auth_welcome_sub')]));
+    if(state.formError) c.appendChild(el('div',{class:'auth-error'},[state.formError]));
+    const eF=fi(t('auth_email'),'l-e','email','tu@email.com'),pF=fi(t('auth_pass'),'l-p','password','••••••••');
+    c.appendChild(eF.wrap);c.appendChild(pF.wrap);
+    c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:6px;',onclick:()=>{
+      const em=eF.input.value.trim().toLowerCase(),pw=pF.input.value;
+      const u=state.users.find(u=>u.email.toLowerCase()===em&&u.password===pw&&u.rol==='influencer');
+      if(!u){go('auth',{formError:t('auth_error_creds')});return;}
+      state.currentUser=u;go('dashboard');
+    }},[t('auth_login')]));
+    c.appendChild(el('div',{class:'auth-foot'},[t('auth_demo'),el('span',{style:'font-family:var(--font-mono);color:var(--white);'},['laura@cripto.com / 1234'])]));
+  } else {
+    c.appendChild(el('h2',{class:'auth-title'},[t('auth_join')]));
+    c.appendChild(el('p',{class:'auth-sub'},[t('auth_join_sub')]));
+    if(state.formError) c.appendChild(el('div',{class:'auth-error'},[state.formError]));
+    const nF=fi(t('auth_name'),'r-n','text',''),eF=fi(t('auth_email'),'r-e','email',''),pF=fi(t('auth_pass'),'r-p','password','');
+    c.appendChild(nF.wrap);c.appendChild(eF.wrap);c.appendChild(pF.wrap);
+    c.appendChild(el('div',{style:'height:1px;background:var(--line);margin:20px 0;'}));
+    c.appendChild(el('p',{style:'font-size:12px;color:var(--slate);margin-bottom:14px;'},[t('auth_profile_data')]));
+    const aF=fi(t('auth_alias'),'r-a','text','@alias');c.appendChild(aF.wrap);
+    const nw=el('div',{class:'field'}),nl=el('div',{});nw.appendChild(el('label',{},[t('auth_social')]));
+    let netRows=[];
+    function addNR(pl,u,s){
+      const r=el('div',{class:'net-row'}),
+        sel=el('select',{},['Twitter/X','TikTok','YouTube','Instagram'].map(pp=>el('option',{value:pp,...(pp===pl?{selected:'selected'}:{})},[pp]))),
+        ui=el('input',{type:'text',placeholder:t('auth_user_ph'),value:u||''}),
+        si=el('input',{type:'number',placeholder:t('auth_followers_ph'),value:s||''});
+      r.appendChild(sel);r.appendChild(ui);r.appendChild(si);netRows.push({sel,urlIn:ui,segIn:si});nl.appendChild(r);
+    }
+    addNR('Twitter/X','','');nw.appendChild(nl);
+    nw.appendChild(el('button',{type:'button',class:'add-net',onclick:()=>addNR('Twitter/X','','')},[t('auth_add_net')]));
+    c.appendChild(nw);
+    const niF=fi(t('auth_niche'),'r-ni','text',t('auth_niche_ph')),waF=fi(t('auth_wallet'),'r-w','text','0x...');
+    c.appendChild(niF.wrap);c.appendChild(waF.wrap);
+    const bw=el('div',{class:'field'});bw.appendChild(el('label',{},[t('auth_bio')]));
+    const bioF=el('textarea',{placeholder:t('auth_bio_ph')});bw.appendChild(bioF);c.appendChild(bw);
+    c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:10px;',onclick:()=>{
+      const em=eF.input.value.trim().toLowerCase(),nm=nF.input.value.trim(),pw=pF.input.value;
+      if(!nm||!em||pw.length<4){go('auth',{formError:t('auth_error_fields')});return;}
+      if(state.users.some(u=>u.email.toLowerCase()===em)){go('auth',{formError:t('auth_error_exists')});return;}
+      const nu={id:uid('u'),email:em,password:pw,rol:'influencer',nombre_completo:nm,estado:'activo',
+        perfil:{alias:aF.input.value.trim()||nm,redes:netRows.map(r=>({plataforma:r.sel.value,url:r.urlIn.value.trim(),seguidores:Number(r.segIn.value)||0})).filter(r=>r.url),
+          nicho:niF.input.value.trim(),wallet:waF.input.value.trim(),bio:bioF.value.trim()}};
+      state.users.push(nu);state.currentUser=nu;go('dashboard');
+    }},[t('auth_create')]));
+  }
+  w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
+}
+function fi(label,id,type,ph){const w=el('div',{class:'field'});w.appendChild(el('label',{for:id},[label]));const i=el('input',{type,id,placeholder:ph});w.appendChild(i);return{wrap:w,input:i};}
+
+/* =========================================================
+   ADMIN AUTH (SECRET)
+   ========================================================= */
+function AdminAuth(){
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card',style:'border-color:var(--violet);'});
+  c.appendChild(el('div',{style:'text-align:center;margin-bottom:20px;'},[el('span',{style:'display:inline-block;width:16px;height:16px;background:var(--violet);border-radius:3px;transform:rotate(45deg);'})]));
+  c.appendChild(el('h2',{class:'auth-title',style:'text-align:center;'},[t('admin_title')]));
+  c.appendChild(el('p',{class:'auth-sub',style:'text-align:center;'},[t('admin_sub')]));
+  if(state.formError) c.appendChild(el('div',{class:'auth-error'},[state.formError]));
+  const eF=fi(t('admin_email_label'),'a-e','email','admin@chuminicky.io'),pF=fi(t('auth_pass'),'a-p','password','••••••••');
+  c.appendChild(eF.wrap);c.appendChild(pF.wrap);
+  c.appendChild(el('button',{class:'btn btn-violet',style:'width:100%;margin-top:6px;',onclick:()=>{
+    const em=eF.input.value.trim().toLowerCase(),pw=pF.input.value;
+    const u=state.users.find(u=>u.email.toLowerCase()===em&&u.password===pw&&u.rol==='admin');
+    if(!u){go('admin_auth',{formError:t('admin_error')});return;}
+    state.currentUser=u;go('dashboard');
+  }},[t('admin_enter')]));
+  c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('landing')},[t('admin_back')])]));
+  w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
+}
+
+/* =========================================================
+   CAMPAIGNS
+   ========================================================= */
+function Campaigns(){
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const m=el('main',{class:'section'});
+  m.appendChild(el('div',{class:'section-head'},[el('div',{class:'eyebrow'},[t('camp_eyebrow')]),el('h2',{class:'section-title'},[t('camp_title')])]));
+  const fl=el('div',{class:'filters'});
+  [['todas',t('filter_all')],['activa',t('filter_active')],['cerrada',t('filter_closed')]].forEach(([f,l])=>{
+    fl.appendChild(el('button',{class:'chip'+(state.campFilter===f?' on':''),onclick:()=>go('campaigns',{campFilter:f})},[l]));
+  });
+  m.appendChild(fl);
+  const list=state.campañas.filter(c=>state.campFilter==='todas'||c.estado===state.campFilter);
+  const g=el('div',{class:'camp-grid'});
+  if(!list.length) g.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['🗂️']),el('h3',{},[t('camp_no_results')]),el('p',{},[t('camp_try_filter')])]));
+  else list.forEach(c=>g.appendChild(campCard(c)));
+  m.appendChild(g);p.appendChild(m);p.appendChild(Footer());
+  if(state.modal&&state.modal.type==='apply') p.appendChild(ApplyModal(state.modal.campaignId));
+  return p;
+}
+function campCard(c){
+  const cd=el('div',{class:'camp-card'});
+  cd.appendChild(el('div',{class:'camp-top'},[el('div',{class:'camp-title'},[lt(c.titulo)]),el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]));
+  cd.appendChild(el('p',{class:'camp-desc'},[lt(c.descripcion)]));
+  cd.appendChild(el('div',{class:'camp-meta'},[el('span',{class:'meta-tag'},[c.plataforma]),el('span',{class:'meta-tag'},[lt(c.tipo)]),el('span',{class:'meta-tag'},[lt(c.requisitos).split(',')[0]])]));
+  const pr=el('div',{class:'camp-pay'},[el('div',{},[el('div',{class:'pay-amt'},[c.presupuesto+' '+c.moneda]),el('div',{class:'pay-deadline'},[t('closes')+' '+c.fecha_limite])])]);
+  if(c.estado==='activa'){
+    if(state.currentUser&&state.currentUser.rol==='influencer'){
+      const ya=state.postulaciones.some(pp=>pp.campaña_id===c.id&&pp.influencer_id===state.currentUser.id);
+      pr.appendChild(el('button',{class:'btn '+(ya?'btn-ghost':'btn-violet')+' btn-sm',disabled:ya?'disabled':null,
+        onclick:()=>{if(!ya) go('campaigns',{modal:{type:'apply',campaignId:c.id}});}
+      },[ya?t('camp_already'):t('camp_apply')]));
+    } else if(!state.currentUser){
+      pr.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'register'})},[t('camp_login_first')]));
+    }
+  }
+  cd.appendChild(pr);return cd;
+}
+function ApplyModal(cid){
+  const c=state.campañas.find(cc=>cc.id===cid);
+  const bg=el('div',{class:'modal-bg',onclick:e=>{if(e.target===bg)go('campaigns',{modal:null});}});
+  const md=el('div',{class:'modal'});
+  md.appendChild(el('div',{class:'modal-head'},[el('h2',{class:'auth-title'},[t('apply_title')]),el('button',{class:'modal-close',onclick:()=>go('campaigns',{modal:null})},['×'])]));
+  md.appendChild(el('p',{class:'auth-sub'},[`${lt(c.titulo)} — ${c.presupuesto} ${c.moneda}`]));
+  const pf=state.currentUser.perfil||{};
+  md.appendChild(el('div',{style:'background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:14px;margin-bottom:18px;font-size:12.5px;color:var(--slate);line-height:1.7;'},[
+    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_alias')]),pf.alias||'—']),
+    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_niche')]),pf.nicho||'—']),
+    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_wallet')]),pf.wallet||'—']),
+  ]));
+  md.appendChild(el('p',{style:'font-size:12px;color:var(--slate);margin-bottom:18px;'},[t('apply_info')]));
+  md.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;',onclick:()=>{
+    const np={id:uid('p'),campaña_id:c.id,influencer_id:state.currentUser.id,estado:'pendiente',fecha_postulacion:new Date().toISOString().slice(0,10),link_contenido:'',comentario_admin:''};
+    state.postulaciones.push(np);
+    state.mensajes.push({id:uid('m'),postulacion_id:np.id,de:'u-admin',texto:t('apply_auto_msg').replace('{title}',lt(c.titulo)),hora:'ahora'});
+    go('campaigns',{modal:null});
+  }},[t('apply_confirm')]));
+  bg.appendChild(md);return bg;
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+function Dashboard(){
+  if(!state.currentUser) return Auth();
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const d=el('div',{class:'dash'}),isA=state.currentUser.rol==='admin';
+  const sb=el('div',{class:'sidebar'}),sec=el('div',{class:'side-section'});
+  sec.appendChild(el('div',{class:'side-label'},[t('dash_panel')]));
+  const items=isA
+    ?[[t('dash_campaigns'),state.campañas.length,'campañas'],[t('dash_applications'),state.postulaciones.length,'postulaciones'],[t('dash_influencers'),state.users.filter(u=>u.rol==='influencer').length,'influencers']]
+    :[[t('dash_my_apps'),state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id).length,'mis_post'],[t('dash_my_profile'),null,'mi_perfil']];
+  items.forEach(([label,count,key])=>{
+    sec.appendChild(el('button',{class:'side-btn'+(state.dashSection===key?' active':''),onclick:()=>go('dashboard',{dashSection:key})},[
+      label,count!==null?el('span',{class:'side-count'},[String(count)]):null
+    ]));
+  });
+  sb.appendChild(sec);d.appendChild(sb);
+  const ct=el('div',{class:'dash-content'});
+  if(isA){
+    if(state.dashSection==='campañas') ct.appendChild(AdminCamp());
+    else if(state.dashSection==='influencers') ct.appendChild(AdminInf());
+    else ct.appendChild(AdminPost());
+  } else {
+    if(state.dashSection==='mi_perfil') ct.appendChild(InfPerfil());
+    else ct.appendChild(InfPost());
+  }
+  d.appendChild(ct);p.appendChild(d);return p;
+}
+function AdminCamp(){
+  const w=el('div');
+  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_campaigns')]),el('span',{class:'pill'},[state.campañas.length+' '+t('dash_total')])]));
+  const tb=el('table',{class:'tbl'});
+  tb.innerHTML=`<tr><th>${t('tbl_title')}</th><th>${t('tbl_platform')}</th><th>${t('tbl_pay')}</th><th>${t('tbl_status')}</th><th>${t('tbl_apps')}</th></tr>`;
+  state.campañas.forEach(c=>{
+    const n=state.postulaciones.filter(pp=>pp.campaña_id===c.id).length;
+    tb.appendChild(el('tr',{},[el('td',{},[lt(c.titulo)]),el('td',{},[c.plataforma]),el('td',{},[c.presupuesto+' '+c.moneda]),el('td',{},[el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]),el('td',{},[String(n)])]));
+  });
+  w.appendChild(tb);return w;
+}
+function AdminPost(){
+  const w=el('div');
+  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_applications')]),el('span',{class:'pill'},[state.postulaciones.length+' '+t('dash_total')])]));
+  if(!state.postulaciones.length){w.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['📭']),el('h3',{},[t('empty_apps_title')]),el('p',{},[t('empty_apps_text')])]));return w;}
+  const tb=el('table',{class:'tbl'});
+  tb.innerHTML=`<tr><th>${t('tbl_influencer')}</th><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_actions')}</th></tr>`;
+  state.postulaciones.forEach(pp=>{
+    const inf=state.users.find(u=>u.id===pp.influencer_id),camp=state.campañas.find(c=>c.id===pp.campaña_id);
+    const btns=[];
+    if(pp.estado==='pendiente'){
+      btns.push(el('button',{class:'btn btn-sm btn-primary',style:'margin-right:6px;',onclick:()=>{pp.estado='aprobada';render();}},[t('dash_approve')]));
+      btns.push(el('button',{class:'btn btn-sm btn-ghost',style:'margin-right:6px;',onclick:()=>{pp.estado='rechazada';render();}},[t('dash_reject')]));
+    }
+    btns.push(el('button',{class:'btn btn-sm btn-violet',onclick:()=>go('chat',{activeChatId:pp.id})},['Chat']));
+    tb.appendChild(el('tr',{},[el('td',{},[inf?(inf.perfil?.alias||inf.nombre_completo):'—']),el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[statusT(pp.estado)])]),el('td',{},btns)]));
+  });
+  w.appendChild(tb);return w;
+}
+function AdminInf(){
+  const w=el('div'),infs=state.users.filter(u=>u.rol==='influencer');
+  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_influencers')]),el('span',{class:'pill'},[infs.length+' '+t('dash_total')])]));
+  const tb=el('table',{class:'tbl'});
+  tb.innerHTML=`<tr><th>${t('tbl_alias')}</th><th>${t('tbl_email')}</th><th>${t('tbl_niche')}</th><th>${t('tbl_social')}</th><th>${t('tbl_wallet')}</th></tr>`;
+  infs.forEach(u=>{const pf=u.perfil||{};tb.appendChild(el('tr',{},[el('td',{},[pf.alias||'—']),el('td',{},[u.email]),el('td',{},[pf.nicho||'—']),el('td',{},[(pf.redes||[]).map(r=>r.plataforma).join(', ')||'—']),el('td',{style:'font-family:var(--font-mono);font-size:11.5px;'},[pf.wallet||'—'])]));});
+  w.appendChild(tb);return w;
+}
+function InfPost(){
+  const w=el('div'),mine=state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id);
+  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_apps')]),el('span',{class:'pill'},[mine.length+' '+t('dash_total')])]));
+  if(!mine.length){
+    w.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['🎯']),el('h3',{},[t('empty_myapps_title')]),el('p',{},[t('empty_myapps_text')])]));
+    w.appendChild(el('div',{style:'text-align:center;margin-top:16px;'},[el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('empty_myapps_cta')])]));
+    return w;
+  }
+  const tb=el('table',{class:'tbl'});
+  tb.innerHTML=`<tr><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_deadline')}</th><th></th></tr>`;
+  mine.forEach(pp=>{const camp=state.campañas.find(c=>c.id===pp.campaña_id);
+    tb.appendChild(el('tr',{},[el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[statusT(pp.estado)])]),el('td',{},[camp?camp.presupuesto+' '+camp.moneda:'—']),el('td',{},[el('button',{class:'btn btn-sm btn-violet',onclick:()=>go('chat',{activeChatId:pp.id})},['Chat'])])]));
+  });
+  w.appendChild(tb);return w;
+}
+function InfPerfil(){
+  const pf=state.currentUser.perfil||{},w=el('div');
+  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_profile')])]));
+  w.appendChild(el('div',{class:'auth-card',style:'max-width:480px;'},[
+    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_alias')]),
+    el('p',{style:'font-family:var(--font-display);font-size:18px;margin-bottom:16px;'},[pf.alias||'—']),
+    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_niche')]),
+    el('p',{style:'margin-bottom:16px;'},[pf.nicho||'—']),
+    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_wallet')]),
+    el('p',{style:'font-family:var(--font-mono);font-size:12.5px;margin-bottom:16px;'},[pf.wallet||'—']),
+    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_bio')]),
+    el('p',{style:'margin-bottom:16px;line-height:1.6;font-size:13.5px;'},[pf.bio||'—']),
+    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:8px;'},[t('auth_social')]),
+    el('div',{class:'camp-meta'},(pf.redes||[]).map(r=>el('span',{class:'meta-tag'},[`${r.plataforma}: ${r.seguidores||0} ${t('profile_followers')}`])))
+  ]));
+  return w;
+}
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+function Chat(){
+  if(!state.currentUser) return Auth();
+  const p=el('div',{class:'app'});p.appendChild(Nav());
+  const isA=state.currentUser.rol==='admin';
+  const myP=isA?state.postulaciones:state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id);
+  const ly=el('div',{class:'chat-layout'}),cl=el('div',{class:'chat-list'});
+  if(!myP.length) cl.appendChild(el('div',{style:'padding:24px;color:var(--slate);font-size:12.5px;'},[t('chat_no_convos')]));
+  myP.forEach(pp=>{
+    const camp=state.campañas.find(c=>c.id===pp.campaña_id),inf=state.users.find(u=>u.id===pp.influencer_id);
+    const msgs=state.mensajes.filter(mm=>mm.postulacion_id===pp.id),last=msgs[msgs.length-1];
+    cl.appendChild(el('div',{class:'chat-list-item'+(state.activeChatId===pp.id?' active':''),onclick:()=>go('chat',{activeChatId:pp.id})},[
+      el('div',{class:'cli-top'},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')]),
+      el('div',{class:'cli-camp'},[camp?lt(camp.titulo):'']),
+      el('div',{class:'cli-preview'},[last?last.texto:t('chat_no_msgs')])
+    ]));
+  });
+  ly.appendChild(cl);
+  const wn=el('div',{class:'chat-window'}),ap=state.postulaciones.find(pp=>pp.id===state.activeChatId)||(myP.length===1?myP[0]:null);
+  if(!ap){
+    wn.appendChild(el('div',{class:'chat-empty'},[el('div',{style:'font-size:28px;'},['💬']),el('div',{},[t('chat_select')])]));
+  } else {
+    const camp=state.campañas.find(c=>c.id===ap.campaña_id),inf=state.users.find(u=>u.id===ap.influencer_id);
+    wn.appendChild(el('div',{class:'chat-header'},[el('div',{},[el('h3',{},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')+' · Chuminicky']),el('div',{class:'sub'},[camp?lt(camp.titulo):''])]),el('span',{class:'status-pill status-'+ap.estado},[statusT(ap.estado)])]));
+    const mw=el('div',{class:'chat-msgs',id:'chat-msgs-scroll'});
+    state.mensajes.filter(mm=>mm.postulacion_id===ap.id).forEach(mm=>{
+      const mine=mm.de===state.currentUser.id;
+      mw.appendChild(el('div',{class:'msg '+(mine?'out':'in')},[mm.texto,el('span',{class:'mt'},[mm.hora])]));
+    });
+    wn.appendChild(mw);
+    const ir=el('div',{class:'chat-input'}),inp=el('input',{type:'text',placeholder:t('chat_placeholder')});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')sb.click();});
+    const sb=el('button',{class:'btn btn-primary',onclick:()=>{
+      const tx=inp.value.trim();if(!tx)return;
+      state.mensajes.push({id:uid('m'),postulacion_id:ap.id,de:state.currentUser.id,texto:tx,hora:'ahora'});
+      go('chat',{activeChatId:ap.id});
+      setTimeout(()=>{const sc=document.getElementById('chat-msgs-scroll');if(sc)sc.scrollTop=sc.scrollHeight;},0);
+    }},[t('chat_send')]);
+    ir.appendChild(inp);ir.appendChild(sb);wn.appendChild(ir);
+  }
+  ly.appendChild(wn);p.appendChild(ly);
+  setTimeout(()=>{const sc=document.getElementById('chat-msgs-scroll');if(sc)sc.scrollTop=sc.scrollHeight;},0);
+  return p;
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+const View={landing:Landing,auth:Auth,admin_auth:AdminAuth,campaigns:Campaigns,dashboard:Dashboard,chat:Chat};
+render();
+</script>
+</body>
+</html>
