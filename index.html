@@ -127,6 +127,12 @@
   .camp-deliverables,.camp-pago-info{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px;}
   .cdl-title{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--lime);letter-spacing:.04em;margin-bottom:8px;}
   .cdl-text{color:var(--slate);line-height:1.65;}
+  .contract-section{background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:14px;margin-bottom:12px;}
+  .contract-row{font-size:12.5px;line-height:1.6;margin-bottom:4px;}
+  .contract-dim{color:var(--slate);}
+  .contract-check{display:flex;gap:10px;align-items:flex-start;margin:18px 0 4px;padding:14px;border:1px solid var(--line);border-radius:9px;background:var(--ink-2);}
+  .contract-check input[type=checkbox]{margin-top:3px;accent-color:var(--lime);width:18px;height:18px;flex-shrink:0;cursor:pointer;}
+  .contract-check label{font-size:12px;color:var(--slate);line-height:1.55;cursor:pointer;}
   .pay-amt{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--lime);}
   .pay-deadline{font-size:11px;color:var(--slate);font-family:var(--font-mono);}
 
@@ -155,6 +161,7 @@
   .status-aprobada{background:rgba(200,255,77,0.12);color:var(--lime);}
   .status-rechazada{background:rgba(255,107,94,0.12);color:var(--coral);}
   .status-completada{background:rgba(124,92,255,0.15);color:var(--violet);}
+  .status-activa{background:rgba(200,255,77,0.12);color:var(--lime);}
   .empty{text-align:center;padding:60px 20px;color:var(--slate);}
   .empty .eicon{font-size:32px;margin-bottom:14px;}
   .empty h3{font-family:var(--font-display);color:var(--white);margin-bottom:8px;font-size:16px;}
@@ -239,13 +246,25 @@ es: {
   camp_eyebrow:'Oportunidades abiertas', camp_title:'Campañas ofertadas',
   filter_all:'Todas', filter_active:'Activas', filter_closed:'Cerradas',
   camp_active:'ACTIVA', camp_closed:'CERRADA', camp_no_results:'No hay campañas aquí', camp_try_filter:'Prueba con otro filtro.',
-  camp_already:'Ya postulado', camp_apply:'Postularme', camp_login_first:'Inicia sesión',
+  camp_already:'Colaboración activa', camp_apply:'Participar', camp_login_first:'Inicia sesión',
   camp_deliverables:'Entregables requeridos', camp_payment_info:'Detalles de pago',
   // Apply modal
   apply_title:'Postularme', apply_alias:'Alias: ', apply_niche:'Nicho: ', apply_wallet:'Wallet: ',
   apply_info:'Al postularte se generará automáticamente tu ficha de postulación, visible para el equipo admin.',
   apply_confirm:'Confirmar postulación',
   apply_auto_msg:'¡Hola! Recibimos tu postulación a "{title}". La estamos revisando.',
+  contract_title:'Acuerdo de colaboración',
+  contract_sub:'Al confirmar, aceptas las condiciones de esta campaña e inicias formalmente tu colaboración.',
+  contract_campaign:'Campaña',
+  contract_deliverables:'Entregables que te comprometes a realizar',
+  contract_payment:'Condiciones de pago',
+  contract_deadline:'Fecha límite de entrega',
+  contract_your_data:'Tus datos de colaborador',
+  contract_accept:'He leído y acepto las condiciones de esta campaña. Entiendo que al confirmar inicio mi colaboración y me comprometo a entregar el contenido descrito.',
+  contract_start_date:'Fecha de inicio de colaboración',
+  contract_confirm:'Aceptar condiciones e iniciar colaboración',
+  contract_auto_msg:'🤝 ¡Colaboración iniciada! {title} — Fecha de inicio: {date}. Bienvenido/a al equipo. Usa este chat para coordinar los entregables.',
+  contract_legal:'Al aceptar, este acuerdo queda registrado con tu email, wallet y fecha. El pago se realizará tras la verificación de los entregables.',
   // Dashboard
   dash_panel:'Panel',
   dash_campaigns:'Campañas', dash_applications:'Postulaciones', dash_influencers:'Influencers',
@@ -264,7 +283,7 @@ es: {
   chat_team:'Equipo Admin', chat_select:'Selecciona una conversación para empezar a chatear',
   chat_placeholder:'Escribe un mensaje...', chat_send:'Enviar', chat_no_msgs:'Sin mensajes aún',
   // Statuses
-  status_pendiente:'pendiente', status_aprobada:'aprobada', status_rechazada:'rechazada', status_completada:'completada',
+  status_pendiente:'pendiente', status_aprobada:'aprobada', status_rechazada:'rechazada', status_completada:'completada', status_activa:'en curso',
 },
 en: {
   nav_home:'Home', nav_campaigns:'Campaigns', nav_panel:'Dashboard', nav_messages:'Messages',
@@ -300,12 +319,24 @@ en: {
   camp_eyebrow:'Open opportunities', camp_title:'Available campaigns',
   filter_all:'All', filter_active:'Active', filter_closed:'Closed',
   camp_active:'ACTIVE', camp_closed:'CLOSED', camp_no_results:'No campaigns here', camp_try_filter:'Try another filter.',
-  camp_already:'Already applied', camp_apply:'Apply', camp_login_first:'Log in first',
+  camp_already:'Collaboration active', camp_apply:'Join campaign', camp_login_first:'Log in first',
   camp_deliverables:'Required deliverables', camp_payment_info:'Payment details',
   apply_title:'Apply', apply_alias:'Alias: ', apply_niche:'Niche: ', apply_wallet:'Wallet: ',
   apply_info:'By applying, your application brief will be automatically created and visible to the admin team.',
   apply_confirm:'Confirm application',
   apply_auto_msg:'Hi! We received your application for "{title}". We\'re reviewing it.',
+  contract_title:'Collaboration agreement',
+  contract_sub:'By confirming, you accept the conditions of this campaign and formally start your collaboration.',
+  contract_campaign:'Campaign',
+  contract_deliverables:'Deliverables you commit to complete',
+  contract_payment:'Payment terms',
+  contract_deadline:'Delivery deadline',
+  contract_your_data:'Your collaborator details',
+  contract_accept:'I have read and accept the conditions of this campaign. I understand that by confirming I start my collaboration and commit to delivering the described content.',
+  contract_start_date:'Collaboration start date',
+  contract_confirm:'Accept terms & start collaboration',
+  contract_auto_msg:'🤝 Collaboration started! {title} — Start date: {date}. Welcome to the team. Use this chat to coordinate deliverables.',
+  contract_legal:'By accepting, this agreement is recorded with your email, wallet and date. Payment will be made after deliverables are verified.',
   dash_panel:'Dashboard',
   dash_campaigns:'Campaigns', dash_applications:'Applications', dash_influencers:'Influencers',
   dash_my_apps:'My applications', dash_my_profile:'My profile',
@@ -321,7 +352,7 @@ en: {
   chat_no_convos:'You don\'t have active conversations yet.',
   chat_team:'Admin Team', chat_select:'Select a conversation to start chatting',
   chat_placeholder:'Write a message...', chat_send:'Send', chat_no_msgs:'No messages yet',
-  status_pendiente:'pending', status_aprobada:'approved', status_rechazada:'rejected', status_completada:'completed',
+  status_pendiente:'pending', status_aprobada:'approved', status_rechazada:'rejected', status_completada:'completed', status_activa:'active',
 }
 };
 function t(key){ return i18n[state.lang][key] || i18n['es'][key] || key; }
@@ -613,22 +644,69 @@ function campCard(c){
 function ApplyModal(cid){
   const c=state.campañas.find(cc=>cc.id===cid);
   const bg=el('div',{class:'modal-bg',onclick:e=>{if(e.target===bg)go('campaigns',{modal:null});}});
-  const md=el('div',{class:'modal'});
-  md.appendChild(el('div',{class:'modal-head'},[el('h2',{class:'auth-title'},[t('apply_title')]),el('button',{class:'modal-close',onclick:()=>go('campaigns',{modal:null})},['×'])]));
-  md.appendChild(el('p',{class:'auth-sub'},[`${lt(c.titulo)} — ${c.presupuesto} ${c.moneda}`]));
+  const md=el('div',{class:'modal',style:'max-width:560px;'});
+  md.appendChild(el('div',{class:'modal-head'},[el('h2',{class:'auth-title'},[t('contract_title')]),el('button',{class:'modal-close',onclick:()=>go('campaigns',{modal:null})},['×'])]));
+  md.appendChild(el('p',{class:'auth-sub'},[t('contract_sub')]));
+
+  // Resumen de campaña
+  const summary=el('div',{class:'contract-section'});
+  summary.appendChild(el('div',{class:'cdl-title'},[t('contract_campaign')]));
+  summary.appendChild(el('div',{class:'contract-row'},[el('b',{},[lt(c.titulo)])]));
+  summary.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.descripcion)]));
+  md.appendChild(summary);
+
+  // Entregables
+  if(c.entregables){
+    const deliv=el('div',{class:'contract-section'});
+    deliv.appendChild(el('div',{class:'cdl-title'},[t('contract_deliverables')]));
+    deliv.appendChild(el('div',{class:'contract-row contract-dim',html:lt(c.entregables).replace(/\n/g,'<br>')}));
+    md.appendChild(deliv);
+  }
+
+  // Condiciones de pago
+  const pay=el('div',{class:'contract-section'});
+  pay.appendChild(el('div',{class:'cdl-title'},[t('contract_payment')]));
+  pay.appendChild(el('div',{class:'contract-row'},[el('span',{class:'pay-amt',style:'font-size:16px;'},[c.presupuesto+' '+c.moneda])]));
+  if(c.pago_info) pay.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.pago_info)]));
+  pay.appendChild(el('div',{class:'contract-row contract-dim'},[t('contract_deadline')+': '+c.fecha_limite]));
+  md.appendChild(pay);
+
+  // Datos del influencer
   const pf=state.currentUser.perfil||{};
-  md.appendChild(el('div',{style:'background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:14px;margin-bottom:18px;font-size:12.5px;color:var(--slate);line-height:1.7;'},[
-    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_alias')]),pf.alias||'—']),
-    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_niche')]),pf.nicho||'—']),
-    el('div',{},[el('b',{style:'color:var(--white)'},[t('apply_wallet')]),pf.wallet||'—']),
-  ]));
-  md.appendChild(el('p',{style:'font-size:12px;color:var(--slate);margin-bottom:18px;'},[t('apply_info')]));
-  md.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;',onclick:()=>{
-    const np={id:uid('p'),campaña_id:c.id,influencer_id:state.currentUser.id,estado:'pendiente',fecha_postulacion:new Date().toISOString().slice(0,10),link_contenido:'',comentario_admin:''};
+  const inf=el('div',{class:'contract-section'});
+  inf.appendChild(el('div',{class:'cdl-title'},[t('contract_your_data')]));
+  inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_alias')+' '+(pf.alias||'—')]));
+  inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_wallet')+' '+(pf.wallet||'—')]));
+  md.appendChild(inf);
+
+  // Checkbox de aceptación
+  const checkWrap=el('div',{class:'contract-check'});
+  const checkId='accept-terms-'+cid;
+  const cb=el('input',{type:'checkbox',id:checkId});
+  const lbl=el('label',{for:checkId},[t('contract_accept')]);
+  checkWrap.appendChild(cb);checkWrap.appendChild(lbl);
+  md.appendChild(checkWrap);
+
+  // Fecha de inicio
+  const today=new Date().toISOString().slice(0,10);
+  md.appendChild(el('div',{style:'font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-align:center;margin:12px 0 4px;'},[t('contract_start_date')+': '+today]));
+
+  // Botón confirmar
+  const confirmBtn=el('button',{class:'btn btn-primary',style:'width:100%;margin-top:10px;opacity:0.4;cursor:not-allowed;',onclick:()=>{
+    if(!cb.checked) return;
+    const np={id:uid('p'),campaña_id:c.id,influencer_id:state.currentUser.id,estado:'activa',fecha_postulacion:today,fecha_inicio:today,link_contenido:'',comentario_admin:'',terms_accepted:true};
     state.postulaciones.push(np);
-    state.mensajes.push({id:uid('m'),postulacion_id:np.id,de:'u-admin',texto:t('apply_auto_msg').replace('{title}',lt(c.titulo)),hora:'ahora'});
+    state.mensajes.push({id:uid('m'),postulacion_id:np.id,de:'u-admin',texto:t('contract_auto_msg').replace('{title}',lt(c.titulo)).replace('{date}',today),hora:'ahora'});
     go('campaigns',{modal:null});
-  }},[t('apply_confirm')]));
+  }},[t('contract_confirm')]);
+  cb.addEventListener('change',()=>{
+    confirmBtn.style.opacity=cb.checked?'1':'0.4';
+    confirmBtn.style.cursor=cb.checked?'pointer':'not-allowed';
+  });
+  md.appendChild(confirmBtn);
+
+  md.appendChild(el('div',{style:'font-size:11px;color:var(--slate);text-align:center;margin-top:14px;line-height:1.5;'},[t('contract_legal')]));
+
   bg.appendChild(md);return bg;
 }
 
