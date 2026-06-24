@@ -241,7 +241,15 @@ function lt(v){return typeof v==='object'&&v!==null?(v[state.lang]||v.es||v.en):
 function stT(s){return t('status_'+s);}
 const root=document.getElementById('root');
 function render(){if(View[state.view]){root.innerHTML='';root.appendChild(View[state.view]());}}
-function go(view,extra){Object.assign(state,extra||{});state.view=view;render();window.scrollTo(0,0);}
+function go(view,extra){
+  // Nunca sobreescribir currentUser con null accidentalmente
+  const safeExtra=extra||{};
+  if('currentUser' in safeExtra && safeExtra.currentUser===null && state.currentUser!==null){
+    // Solo permitir logout explícito
+  }
+  Object.assign(state,safeExtra);
+  state.view=view;render();window.scrollTo(0,0);
+}
 function el(tag,attrs,ch){
   const e=document.createElement(tag);
   if(attrs)for(const k in attrs){if(k==='class')e.className=attrs[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);else if(k==='html')e.innerHTML=attrs[k];else e.setAttribute(k,attrs[k]);}
@@ -449,7 +457,7 @@ function campCard(c){
   if(c.pago_info)cd.appendChild(el('div',{class:'camp-pago-info'},[el('div',{class:'cdl-title'},[t('camp_payment_info')]),el('div',{class:'cdl-text'},[lt(c.pago_info)])]));
   const pr=el('div',{class:'camp-pay'},[el('div',{},[el('div',{class:'pay-amt'},[c.presupuesto+' '+c.moneda]),el('div',{class:'pay-deadline'},[t('closes')+' '+c.fecha_limite])])]);
   if(c.estado==='activa'){
-    if(state.currentUser?.rol==='influencer'){const ya=state.postulaciones.some(pp=>pp.campaña_id===c.id&&pp.influencer_id===state.currentUser.id);pr.appendChild(el('button',{class:'btn '+(ya?'btn-ghost':'btn-violet')+' btn-sm',disabled:ya?'disabled':null,onclick:()=>{if(!ya)go('campaigns',{modal:{type:'apply',campaignId:c.id}});}},[ya?t('camp_already'):t('camp_apply')]));}
+    if(state.currentUser&&state.currentUser.rol==='influencer'){const ya=state.postulaciones.some(pp=>pp.campaña_id===c.id&&pp.influencer_id===state.currentUser.id);const applyBtn=document.createElement('button');applyBtn.className='btn '+(ya?'btn-ghost':'btn-violet')+' btn-sm';applyBtn.textContent=ya?t('camp_already'):t('camp_apply');if(ya){applyBtn.disabled=true;}else{applyBtn.onclick=function(){go('campaigns',{modal:{type:'apply',campaignId:c.id}});};}pr.appendChild(applyBtn);}
     else if(!state.currentUser)pr.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'register',formError:'',formSuccess:''})},[t('camp_login_first')]));
   }
   cd.appendChild(pr);return cd;
