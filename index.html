@@ -6,123 +6,8 @@
 <title>Chuminicky Publiciters</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, onSnapshot, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBrjuaAOcbXdf6AYIs1zkE32QO9PcJ2qG4",
-  authDomain: "chuminicky-dwall.firebaseapp.com",
-  projectId: "chuminicky-dwall",
-  storageBucket: "chuminicky-dwall.firebasestorage.app",
-  messagingSenderId: "792658008584",
-  appId: "1:792658008584:web:304562a3970e2095eb0fbd"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-/* =========================================================
-   DB HELPERS
-   ========================================================= */
-window.DB = {
-  // USERS
-  async saveUser(user){
-    await setDoc(doc(db,'users',user.id), user);
-  },
-  async getUser(email){
-    const snap = await getDocs(query(collection(db,'users'), where('email','==',email)));
-    if(snap.empty) return null;
-    return snap.docs[0].data();
-  },
-  async getAllUsers(){
-    const snap = await getDocs(collection(db,'users'));
-    return snap.docs.map(d=>d.data());
-  },
-  // POSTULACIONES
-  async savePostulacion(p){
-    await setDoc(doc(db,'postulaciones',p.id), p);
-  },
-  async updatePostulacion(id, data){
-    await updateDoc(doc(db,'postulaciones',id), data);
-  },
-  async getAllPostulaciones(){
-    const snap = await getDocs(collection(db,'postulaciones'));
-    return snap.docs.map(d=>d.data());
-  },
-  // MENSAJES
-  async savemensaje(m){
-    await setDoc(doc(db,'mensajes',m.id), m);
-  },
-  async getAllMensajes(){
-    const snap = await getDocs(collection(db,'mensajes'));
-    return snap.docs.map(d=>d.data());
-  },
-  // RESET TOKENS
-  async saveResetToken(email, code, expires){
-    await setDoc(doc(db,'reset_tokens',email), {code, expires});
-  },
-  async getResetToken(email){
-    const snap = await getDoc(doc(db,'reset_tokens',email));
-    return snap.exists() ? snap.data() : null;
-  },
-  async deleteResetToken(email){
-    await setDoc(doc(db,'reset_tokens',email), {deleted:true, expires:0});
-  }
-};
-
-// Cargar datos de Firebase al iniciar
-async function initFromFirebase(){
-  try {
-    showLoader(true);
-    const [users, posts, msgs] = await Promise.all([
-      window.DB.getAllUsers(),
-      window.DB.getAllPostulaciones(),
-      window.DB.getAllMensajes()
-    ]);
-    // Mantener admin local, agregar usuarios de Firebase
-    const adminUser = state.users.find(u=>u.rol==='admin');
-    const fbInfluencers = users.filter(u=>u.rol==='influencer');
-    state.users = [adminUser, ...fbInfluencers];
-    state.postulaciones = posts;
-    state.mensajes = msgs;
-    showLoader(false);
-    render();
-  } catch(e) {
-    console.error('Firebase init error:', e);
-    showLoader(false);
-    render();
-  }
-}
-
-function showLoader(show){
-  let loader = document.getElementById('fb-loader');
-  if(show){
-    if(!loader){
-      loader = document.createElement('div');
-      loader.id = 'fb-loader';
-      loader.style.cssText = 'position:fixed;inset:0;background:#0B0F19;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;';
-      loader.innerHTML = '<div style="width:32px;height:32px;background:#C8FF4D;border-radius:4px;transform:rotate(45deg);animation:spin 1s linear infinite;"></div><div style="font-family:JetBrains Mono,monospace;font-size:12px;color:#8A8FA3;letter-spacing:.1em;">CONECTANDO...</div><style>@keyframes spin{to{transform:rotate(225deg);}}</style>';
-      document.body.appendChild(loader);
-    }
-  } else {
-    if(loader) loader.remove();
-  }
-}
-
-// Arrancar la app una vez Firebase esté listo
-window.addEventListener('DOMContentLoaded', ()=>{
-  initFromFirebase();
-});
-</script>
 <style>
-  :root{
-    --ink:#0B0F19;--ink-2:#11172A;--panel:#161D33;--line:#272F4A;
-    --violet:#7C5CFF;--violet-dim:#5A3FE0;--lime:#C8FF4D;--white:#F5F3EE;
-    --slate:#8A8FA3;--coral:#FF6B5E;
-    --font-display:'Space Grotesk',sans-serif;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
-  }
+  :root{--ink:#0B0F19;--ink-2:#11172A;--panel:#161D33;--line:#272F4A;--violet:#7C5CFF;--violet-dim:#5A3FE0;--lime:#C8FF4D;--white:#F5F3EE;--slate:#8A8FA3;--coral:#FF6B5E;--font-display:'Space Grotesk',sans-serif;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;}
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{background:var(--ink);color:var(--white);font-family:var(--font-body);scroll-behavior:smooth;}
   ::selection{background:var(--violet);color:var(--white);}
@@ -133,7 +18,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   header.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:rgba(11,15,25,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
   .logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;}
   .logo .mark{width:10px;height:10px;background:var(--lime);display:inline-block;border-radius:2px;transform:rotate(45deg);transition:.15s;cursor:pointer;}
-  .logo .mark:active{transform:rotate(45deg) scale(0.8);}
   .logo .word{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-0.02em;}
   .logo .word span{color:var(--lime);}
   nav.links{display:flex;gap:28px;align-items:center;}
@@ -169,7 +53,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
   .tick-item{font-family:var(--font-mono);font-size:12.5px;color:var(--slate);padding:0 28px;display:inline-flex;gap:8px;align-items:center;}
   .tick-item b{color:var(--lime);font-weight:600;}
   .tick-item .dot{width:5px;height:5px;border-radius:50%;background:var(--violet);}
-  .hero{padding:96px 32px 64px;max-width:1080px;margin:0 auto;text-align:left;}
+  .hero{padding:96px 32px 64px;max-width:1080px;margin:0 auto;}
   .eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--violet);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
   .eyebrow::before{content:"";width:24px;height:1px;background:var(--violet);}
   h1.hero-title{font-family:var(--font-display);font-weight:700;font-size:clamp(40px,6vw,72px);line-height:1.02;letter-spacing:-0.03em;max-width:880px;}
@@ -177,11 +61,10 @@ window.addEventListener('DOMContentLoaded', ()=>{
   p.hero-sub{font-size:17px;color:var(--slate);max-width:560px;margin-top:24px;line-height:1.6;}
   .hero-cta{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;}
   .hero-stats{display:flex;gap:48px;margin-top:72px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px;}
-  .stat .num{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--white);}
+  .stat .num{font-family:var(--font-display);font-size:30px;font-weight:700;}
   .stat .lbl{font-family:var(--font-mono);font-size:11.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
   .section{padding:80px 32px;max-width:1080px;margin:0 auto;}
   .section-head{margin-bottom:48px;}
-  .section-head .eyebrow{margin-bottom:14px;}
   h2.section-title{font-family:var(--font-display);font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-0.02em;}
   .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
   .flow-step{background:var(--ink-2);padding:28px 22px;}
@@ -192,23 +75,23 @@ window.addEventListener('DOMContentLoaded', ()=>{
   @media(max-width:600px){.flow{grid-template-columns:1fr;}}
   .auth-wrap{max-width:440px;margin:64px auto;padding:0 24px;}
   .auth-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:36px;}
-  .auth-tabs{display:flex;gap:0;margin-bottom:28px;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .auth-tabs{display:flex;margin-bottom:28px;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
   .auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;background:transparent;border:none;color:var(--slate);}
   .auth-tab.active{background:var(--violet);color:var(--white);}
   h2.auth-title{font-family:var(--font-display);font-size:24px;margin-bottom:6px;}
   p.auth-sub{font-size:13.5px;color:var(--slate);margin-bottom:26px;}
   .field{margin-bottom:18px;}
-  .field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:7px;color:var(--white);}
+  .field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:7px;}
   .field input,.field select,.field textarea{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--white);padding:11px 13px;border-radius:8px;font-size:13.5px;font-family:var(--font-body);}
   .field textarea{resize:vertical;min-height:80px;}
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--violet);}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--violet);outline:none;}
   .auth-error{background:rgba(255,107,94,0.1);border:1px solid var(--coral);color:var(--coral);font-size:12.5px;padding:10px 12px;border-radius:7px;margin-bottom:16px;}
   .auth-success{background:rgba(200,255,77,0.1);border:1px solid var(--lime);color:var(--lime);font-size:12.5px;padding:10px 12px;border-radius:7px;margin-bottom:16px;}
   .auth-foot{margin-top:22px;text-align:center;font-size:12.5px;color:var(--slate);}
-  .auth-foot button{background:none;border:none;color:var(--lime);font-weight:600;font-size:12.5px;}
+  .auth-foot button{background:none;border:none;color:var(--lime);font-weight:600;font-size:12.5px;cursor:pointer;}
   .net-row{display:grid;grid-template-columns:110px 1fr 90px;gap:8px;margin-bottom:8px;}
   .net-row input,.net-row select{padding:9px 10px;font-size:12.5px;}
-  .add-net{background:none;border:1px dashed var(--line);color:var(--slate);width:100%;padding:8px;border-radius:7px;font-size:12px;margin-top:4px;}
+  .add-net{background:none;border:1px dashed var(--line);color:var(--slate);width:100%;padding:8px;border-radius:7px;font-size:12px;margin-top:4px;cursor:pointer;}
   .add-net:hover{border-color:var(--violet);color:var(--violet);}
   .filters{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
   .chip{font-family:var(--font-mono);font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:20px;color:var(--slate);background:var(--panel);cursor:pointer;}
@@ -242,12 +125,12 @@ window.addEventListener('DOMContentLoaded', ()=>{
   .modal-bg{position:fixed;inset:0;background:rgba(11,15,25,0.7);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
   .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;padding:32px;}
   .modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-  .modal-close{background:none;border:none;color:var(--slate);font-size:20px;line-height:1;}
+  .modal-close{background:none;border:none;color:var(--slate);font-size:20px;line-height:1;cursor:pointer;}
   .modal-close:hover{color:var(--white);}
   .dash{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
   .sidebar{border-right:1px solid var(--line);padding:28px 18px;background:var(--ink-2);}
   .side-label{font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;padding:0 10px;margin:18px 0 8px;}
-  .side-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--slate);padding:10px 10px;border-radius:8px;font-size:13.5px;font-weight:500;margin-bottom:2px;}
+  .side-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--slate);padding:10px;border-radius:8px;font-size:13.5px;font-weight:500;margin-bottom:2px;cursor:pointer;}
   .side-btn:hover{background:var(--panel);color:var(--white);}
   .side-btn.active{background:rgba(124,92,255,0.15);color:var(--violet);}
   .side-count{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;background:var(--line);padding:2px 7px;border-radius:10px;}
@@ -258,7 +141,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
   .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;transition:.15s;}
   .stat-card:hover{border-color:var(--violet);}
   .stat-icon{font-size:22px;margin-bottom:8px;}
-  .stat-num{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--white);}
+  .stat-num{font-family:var(--font-display);font-size:28px;font-weight:700;}
   .stat-lbl{font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;}
   @media(max-width:860px){.admin-stats{grid-template-columns:repeat(2,1fr);}}
   table.tbl{width:100%;border-collapse:collapse;}
@@ -275,11 +158,11 @@ window.addEventListener('DOMContentLoaded', ()=>{
   .empty .eicon{font-size:32px;margin-bottom:14px;}
   .empty h3{font-family:var(--font-display);color:var(--white);margin-bottom:8px;font-size:16px;}
   .empty p{font-size:13px;max-width:320px;margin:0 auto;}
-  .chat-layout{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 64px - 56px);}
+  .chat-layout{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 120px);}
   .chat-list{border-right:1px solid var(--line);overflow-y:auto;background:var(--ink-2);}
   .chat-list-item{padding:16px 18px;border-bottom:1px solid var(--line);cursor:pointer;}
   .chat-list-item:hover,.chat-list-item.active{background:var(--panel);}
-  .cli-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;}
+  .cli-top{font-size:13px;font-weight:600;margin-bottom:4px;}
   .cli-camp{font-size:11.5px;color:var(--violet);font-family:var(--font-mono);margin-bottom:4px;}
   .cli-preview{font-size:12px;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .chat-window{display:flex;flex-direction:column;}
@@ -295,315 +178,130 @@ window.addEventListener('DOMContentLoaded', ()=>{
   .chat-input input{flex:1;background:var(--ink-2);border:1px solid var(--line);color:var(--white);padding:12px 14px;border-radius:9px;font-size:13.5px;}
   .chat-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--slate);font-size:13.5px;flex-direction:column;gap:10px;}
   footer{border-top:1px solid var(--line);padding:28px 32px;text-align:center;font-size:12px;color:var(--slate);font-family:var(--font-mono);}
-  @media(max-width:860px){
-    .dash{grid-template-columns:1fr;}
-    .sidebar{display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding:14px;}
-    .side-section{display:flex;gap:6px;}
-    .side-label{display:none;}
-    .chat-layout{grid-template-columns:1fr;}
-    .chat-list{display:none;}
-    nav.links{display:none;}
-    .burger{display:inline-block;}
-    .hero-stats{gap:28px;}
-  }
+  #loader{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:9999;}
+  #loader .spin{width:28px;height:28px;background:var(--lime);border-radius:3px;transform:rotate(45deg);animation:sp 1s linear infinite;}
+  #loader p{font-family:var(--font-mono);font-size:12px;color:var(--slate);letter-spacing:.08em;}
+  @keyframes sp{to{transform:rotate(225deg);}}
+  @media(max-width:860px){.dash{grid-template-columns:1fr;}.sidebar{display:flex;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding:14px;}.side-section{display:flex;gap:6px;}.side-label{display:none;}.chat-layout{grid-template-columns:1fr;}.chat-list{display:none;}nav.links{display:none;}.burger{display:inline-block;}.hero-stats{gap:28px;}}
 </style>
 </head>
 <body>
+<div id="loader"><div class="spin"></div><p>CONECTANDO...</p></div>
 <div id="root"></div>
+
+<!-- Firebase cargado como módulo ES, exponemos DB globalmente -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,setDoc,getDoc,getDocs,collection,query,where,updateDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const app=initializeApp({apiKey:"AIzaSyBrjuaAOcbXdf6AYIs1zkE32QO9PcJ2qG4",authDomain:"chuminicky-dwall.firebaseapp.com",projectId:"chuminicky-dwall",storageBucket:"chuminicky-dwall.firebasestorage.app",messagingSenderId:"792658008584",appId:"1:792658008584:web:304562a3970e2095eb0fbd"});
+const db=getFirestore(app);
+
+window.DB={
+  async saveUser(u){await setDoc(doc(db,'users',u.id),u);},
+  async getUser(email){const s=await getDocs(query(collection(db,'users'),where('email','==',email)));return s.empty?null:s.docs[0].data();},
+  async getAllUsers(){const s=await getDocs(collection(db,'users'));return s.docs.map(d=>d.data());},
+  async savePost(p){await setDoc(doc(db,'postulaciones',p.id),p);},
+  async updatePost(id,data){await updateDoc(doc(db,'postulaciones',id),data);},
+  async getAllPosts(){const s=await getDocs(collection(db,'postulaciones'));return s.docs.map(d=>d.data());},
+  async saveMsg(m){await setDoc(doc(db,'mensajes',m.id),m);},
+  async getAllMsgs(){const s=await getDocs(collection(db,'mensajes'));return s.docs.map(d=>d.data());},
+  async saveToken(email,code,expires){await setDoc(doc(db,'tokens',email),{code,expires});},
+  async getToken(email){const s=await getDoc(doc(db,'tokens',email));return s.exists()?s.data():null;},
+  async delToken(email){await setDoc(doc(db,'tokens',email),{code:'',expires:0});}
+};
+
+// Cargar datos y arrancar app
+try{
+  const[users,posts,msgs]=await Promise.all([window.DB.getAllUsers(),window.DB.getAllPosts(),window.DB.getAllMsgs()]);
+  window.__fbData={users,posts,msgs};
+}catch(e){
+  console.error('Firebase error:',e);
+  window.__fbData={users:[],posts:[],msgs:[]};
+}
+// Señal para el script principal
+window.dispatchEvent(new Event('fb-ready'));
+</script>
+
 <script>
-/* =========================================================
-   i18n
-   ========================================================= */
-const i18n={es:{
-  nav_home:'Inicio',nav_campaigns:'Campañas',nav_panel:'Panel',nav_messages:'Mensajes',
-  nav_login:'Iniciar sesión',nav_register:'Registrarse',nav_logout:'Cerrar sesión',
-  role_influencer:'INFLUENCER',
-  hero_eyebrow:'Campañas de marketing — DiamondWall ($DWALL)',
-  hero_title:'Únete como <span class="accent">influencer</span> y promociona el futuro de DeFi en BSC.',
-  hero_sub:'Chuminicky Publiciters es el canal oficial de campañas de marketing de DiamondWall ($DWALL) — plataforma DeFi de rendimiento real en Binance Smart Chain. Postúlate, coordina y cobra en $DWALL tokens (equivalente en USD al precio post-preventa).',
-  hero_cta_campaigns:'Ver campañas activas',hero_cta_register:'Registrarme como influencer',
-  stat_active:'Campañas activas',stat_influencers:'Influencers registrados',stat_channel:'Canal de mensajería por campaña',
-  how_eyebrow:'Cómo funciona',how_title:'De la postulación al pago, en un solo lugar',
-  flow1_t:'Publicamos la campaña',flow1_d:'Se crea una campaña con presupuesto en USD (pagado en $DWALL), plataforma, requisitos y fecha límite.',
-  flow2_t:'Te postulas',flow2_d:'Completas tu ficha (redes, nicho, wallet BSC) y aplicas a la campaña que te interese.',
-  flow3_t:'Se genera tu ficha',flow3_d:'Automáticamente queda registrada tu postulación, lista para revisión del equipo.',
-  flow4_t:'Chat directo',flow4_d:'Coordinamos detalles, entregables y pago en tu canal privado con el equipo DiamondWall.',
-  why_eyebrow:'Sobre el proyecto',why_title:'¿Qué es DiamondWall ($DWALL)?',
-  why_text:'DiamondWall es una plataforma DeFi automatizada en Binance Smart Chain. Cuando un usuario compra $DWALL, su BNB se divide automáticamente: 50% invertido en Venus Protocol generando rendimiento real, 45% a pools de liquidez en 4 DEXs, y 5% a operaciones. Código 100% open source, 6 smart contracts auditados con 412 tests y 0 vulnerabilidades. Supply fijo, 0% fee de transferencia.',
-  footer:'CHUMINICKY PUBLICITERS © 2026 — CANAL OFICIAL DE CAMPAÑAS DIAMONDWALL ($DWALL)',
-  closes:'cierra',
-  auth_login:'Iniciar sesión',auth_register:'Registro nuevo',
-  auth_welcome:'Bienvenido de nuevo',auth_welcome_sub:'Accede con tu cuenta de influencer.',
-  auth_email:'Email',auth_pass:'Contraseña',auth_name:'Nombre completo',
-  auth_error_creds:'Email o contraseña incorrectos.',auth_error_fields:'Completa nombre, email y contraseña (mínimo 4 caracteres).',
-  auth_error_exists:'Ya existe una cuenta con ese email.',
-  auth_join:'Únete como influencer',auth_join_sub:'Regístrate para postularte a campañas de DiamondWall ($DWALL).',
-  auth_profile_data:'Datos de perfil',auth_alias:'Alias / nombre público',auth_social:'Redes sociales',
-  auth_niche:'Nicho',auth_niche_ph:'Ej: Cripto, DeFi, NFTs',auth_wallet:'Wallet BSC (para pagos)',
-  auth_bio:'Bio',auth_bio_ph:'Cuéntanos brevemente sobre tu contenido...',auth_create:'Crear cuenta',
-  auth_add_net:'+ Añadir red',auth_user_ph:'usuario o link',auth_followers_ph:'seguidores',
-  auth_saving:'Guardando...',
-  forgot_password:'¿Olvidaste tu contraseña?',
-  forgot_title:'Recuperar contraseña',forgot_sub:'Ingresa tu email y te enviaremos un código de 6 dígitos.',
-  forgot_send:'Enviar código',forgot_back:'Volver al login',
-  forgot_success:'Código generado. Como no hay servidor de email configurado, el código es: ',
-  forgot_error:'No existe una cuenta con ese email.',
-  reset_title:'Nueva contraseña',reset_sub:'Ingresa el código recibido y tu nueva contraseña.',
-  reset_code:'Código de verificación',reset_new_pass:'Nueva contraseña',reset_confirm_pass:'Confirmar contraseña',
-  reset_btn:'Cambiar contraseña',
-  reset_error_code:'Código incorrecto o expirado.',reset_error_match:'Las contraseñas no coinciden.',
-  reset_error_len:'La contraseña debe tener al menos 4 caracteres.',
-  reset_success:'¡Contraseña actualizada! Ya puedes iniciar sesión.',
-  admin_title:'Acceso administrador',admin_sub:'Panel reservado para el equipo DiamondWall.',
-  admin_email_label:'Email admin',admin_error:'Credenciales incorrectas.',admin_enter:'Entrar al panel',admin_back:'Volver al inicio',
-  camp_eyebrow:'Oportunidades abiertas',camp_title:'Campañas ofertadas',
-  filter_all:'Todas',filter_active:'Activas',filter_closed:'Cerradas',
-  camp_active:'ACTIVA',camp_closed:'CERRADA',camp_no_results:'No hay campañas aquí',camp_try_filter:'Prueba con otro filtro.',
-  camp_already:'Colaboración activa',camp_apply:'Participar',camp_login_first:'Inicia sesión',
-  camp_deliverables:'Entregables requeridos',camp_payment_info:'Detalles de pago',
-  apply_auto_msg:'¡Hola! Recibimos tu postulación a "{title}". La estamos revisando.',
-  contract_title:'Acuerdo de colaboración',contract_sub:'Al confirmar, aceptas las condiciones e inicias tu colaboración.',
-  contract_campaign:'Campaña',contract_deliverables:'Entregables comprometidos',contract_payment:'Condiciones de pago',
-  contract_deadline:'Fecha límite',contract_your_data:'Tus datos',
-  contract_accept:'He leído y acepto las condiciones. Me comprometo a entregar el contenido descrito.',
-  contract_start_date:'Fecha de inicio',contract_confirm:'Aceptar e iniciar colaboración',
-  contract_auto_msg:'🤝 ¡Colaboración iniciada! {title} — Inicio: {date}. Bienvenido/a al equipo.',
-  contract_legal:'Al aceptar, este acuerdo queda registrado con tu email, wallet y fecha.',
-  apply_alias:'Alias: ',apply_wallet:'Wallet: ',
-  dash_panel:'Panel',dash_visits:'Visitas',dash_registered:'Influencers',dash_active_camps:'Campañas activas',dash_total_apps:'Postulaciones',
-  dash_campaigns:'Campañas',dash_applications:'Postulaciones',dash_influencers:'Influencers',
-  dash_my_apps:'Mis postulaciones',dash_my_profile:'Mi perfil',
-  dash_total:'total',dash_approve:'Aprobar',dash_reject:'Rechazar',
-  tbl_title:'Título',tbl_platform:'Plataforma',tbl_pay:'Pago',tbl_status:'Estado',tbl_apps:'Post.',
-  tbl_influencer:'Influencer',tbl_campaign:'Campaña',tbl_date:'Fecha',tbl_actions:'Acciones',
-  tbl_alias:'Alias',tbl_email:'Email',tbl_niche:'Nicho',tbl_social:'Redes',tbl_wallet:'Wallet',tbl_deadline:'Pago',
-  empty_apps_title:'Aún no hay postulaciones',empty_apps_text:'Aparecerán aquí cuando un influencer se postule.',
-  empty_myapps_title:'Aún no te has postulado',empty_myapps_text:'Ve a Campañas y postúlate.',empty_myapps_cta:'Ver campañas',
-  profile_followers:'seg.',
-  chat_no_convos:'No tienes conversaciones activas.',
-  chat_team:'Equipo Admin',chat_select:'Selecciona una conversación',
-  chat_placeholder:'Escribe un mensaje...',chat_send:'Enviar',chat_no_msgs:'Sin mensajes aún',
-  status_pendiente:'pendiente',status_aprobada:'aprobada',status_rechazada:'rechazada',status_completada:'completada',status_activa:'en curso',
-},en:{
-  nav_home:'Home',nav_campaigns:'Campaigns',nav_panel:'Dashboard',nav_messages:'Messages',
-  nav_login:'Log in',nav_register:'Sign up',nav_logout:'Log out',
-  role_influencer:'INFLUENCER',
-  hero_eyebrow:'Marketing campaigns — DiamondWall ($DWALL)',
-  hero_title:'Join as an <span class="accent">influencer</span> and promote the future of DeFi on BSC.',
-  hero_sub:'Chuminicky Publiciters is the official marketing campaign channel for DiamondWall ($DWALL) — a real yield DeFi platform on Binance Smart Chain. Apply, coordinate and get paid in $DWALL tokens (USD equivalent at post-presale price).',
-  hero_cta_campaigns:'View active campaigns',hero_cta_register:'Register as influencer',
-  stat_active:'Active campaigns',stat_influencers:'Registered influencers',stat_channel:'Messaging channel per campaign',
-  how_eyebrow:'How it works',how_title:'From application to payment, all in one place',
-  flow1_t:'We publish the campaign',flow1_d:'A campaign is created with USD budget (paid in $DWALL), platform, requirements and deadline.',
-  flow2_t:'You apply',flow2_d:'Fill your profile (socials, niche, BSC wallet) and apply to the campaign you like.',
-  flow3_t:'Your brief is generated',flow3_d:'Your application is automatically registered and ready for team review.',
-  flow4_t:'Direct chat',flow4_d:'We coordinate details, deliverables and payment in your private channel with DiamondWall team.',
-  why_eyebrow:'About the project',why_title:'What is DiamondWall ($DWALL)?',
-  why_text:'DiamondWall is an automated DeFi platform on Binance Smart Chain. When a user buys $DWALL, their BNB is automatically split: 50% invested in Venus Protocol generating real yield, 45% to liquidity pools across 4 DEXs, and 5% to operations. 100% open source, 6 audited smart contracts with 412 tests and 0 vulnerabilities. Fixed supply, 0% transfer fee.',
-  footer:'CHUMINICKY PUBLICITERS © 2026 — OFFICIAL DIAMONDWALL ($DWALL) CAMPAIGN CHANNEL',
-  closes:'closes',
-  auth_login:'Log in',auth_register:'Sign up',
-  auth_welcome:'Welcome back',auth_welcome_sub:'Access with your influencer account.',
-  auth_email:'Email',auth_pass:'Password',auth_name:'Full name',
-  auth_error_creds:'Incorrect email or password.',auth_error_fields:'Fill in name, email and password (min 4 characters).',
-  auth_error_exists:'An account with this email already exists.',
-  auth_join:'Join as influencer',auth_join_sub:'Sign up to apply to DiamondWall ($DWALL) marketing campaigns.',
-  auth_profile_data:'Profile details',auth_alias:'Alias / public name',auth_social:'Social media',
-  auth_niche:'Niche',auth_niche_ph:'E.g.: Crypto, DeFi, NFTs',auth_wallet:'BSC Wallet (for payments)',
-  auth_bio:'Bio',auth_bio_ph:'Tell us briefly about your content...',auth_create:'Create account',
-  auth_add_net:'+ Add network',auth_user_ph:'username or link',auth_followers_ph:'followers',
-  auth_saving:'Saving...',
-  forgot_password:'Forgot your password?',
-  forgot_title:'Password recovery',forgot_sub:'Enter your email and we\'ll generate a 6-digit code.',
-  forgot_send:'Send code',forgot_back:'Back to login',
-  forgot_success:'Code generated. Since no email server is configured, the code is: ',
-  forgot_error:'No account found with that email.',
-  reset_title:'New password',reset_sub:'Enter the code and your new password.',
-  reset_code:'Verification code',reset_new_pass:'New password',reset_confirm_pass:'Confirm password',
-  reset_btn:'Change password',
-  reset_error_code:'Incorrect or expired code.',reset_error_match:'Passwords don\'t match.',
-  reset_error_len:'Password must be at least 4 characters.',
-  reset_success:'Password updated! You can now log in.',
-  admin_title:'Admin access',admin_sub:'Panel reserved for the DiamondWall team.',
-  admin_email_label:'Admin email',admin_error:'Invalid credentials.',admin_enter:'Enter dashboard',admin_back:'Back to home',
-  camp_eyebrow:'Open opportunities',camp_title:'Available campaigns',
-  filter_all:'All',filter_active:'Active',filter_closed:'Closed',
-  camp_active:'ACTIVE',camp_closed:'CLOSED',camp_no_results:'No campaigns here',camp_try_filter:'Try another filter.',
-  camp_already:'Collaboration active',camp_apply:'Join campaign',camp_login_first:'Log in first',
-  camp_deliverables:'Required deliverables',camp_payment_info:'Payment details',
-  apply_auto_msg:'Hi! We received your application for "{title}". We\'re reviewing it.',
-  contract_title:'Collaboration agreement',contract_sub:'By confirming, you accept the conditions and formally start your collaboration.',
-  contract_campaign:'Campaign',contract_deliverables:'Deliverables you commit to',contract_payment:'Payment terms',
-  contract_deadline:'Delivery deadline',contract_your_data:'Your details',
-  contract_accept:'I have read and accept the conditions. I commit to delivering the described content.',
-  contract_start_date:'Collaboration start date',contract_confirm:'Accept & start collaboration',
-  contract_auto_msg:'🤝 Collaboration started! {title} — Start: {date}. Welcome to the team.',
-  contract_legal:'By accepting, this agreement is recorded with your email, wallet and date.',
-  apply_alias:'Alias: ',apply_wallet:'Wallet: ',
-  dash_panel:'Dashboard',dash_visits:'Visits',dash_registered:'Influencers',dash_active_camps:'Active campaigns',dash_total_apps:'Applications',
-  dash_campaigns:'Campaigns',dash_applications:'Applications',dash_influencers:'Influencers',
-  dash_my_apps:'My applications',dash_my_profile:'My profile',
-  dash_total:'total',dash_approve:'Approve',dash_reject:'Reject',
-  tbl_title:'Title',tbl_platform:'Platform',tbl_pay:'Pay',tbl_status:'Status',tbl_apps:'Apps',
-  tbl_influencer:'Influencer',tbl_campaign:'Campaign',tbl_date:'Date',tbl_actions:'Actions',
-  tbl_alias:'Alias',tbl_email:'Email',tbl_niche:'Niche',tbl_social:'Socials',tbl_wallet:'Wallet',tbl_deadline:'Pay',
-  empty_apps_title:'No applications yet',empty_apps_text:'They\'ll appear here once an influencer applies.',
-  empty_myapps_title:'You haven\'t applied yet',empty_myapps_text:'Go to Campaigns and apply.',empty_myapps_cta:'View campaigns',
-  profile_followers:'fol.',
-  chat_no_convos:'You don\'t have active conversations yet.',
-  chat_team:'Admin Team',chat_select:'Select a conversation to start chatting',
-  chat_placeholder:'Write a message...',chat_send:'Send',chat_no_msgs:'No messages yet',
-  status_pendiente:'pending',status_aprobada:'approved',status_rechazada:'rejected',status_completada:'completed',status_activa:'active',
-}};
+/* =========================================================  i18n  ========================================================= */
+const i18n={es:{nav_home:'Inicio',nav_campaigns:'Campañas',nav_panel:'Panel',nav_messages:'Mensajes',nav_login:'Iniciar sesión',nav_register:'Registrarse',nav_logout:'Cerrar sesión',role_influencer:'INFLUENCER',hero_eyebrow:'Campañas de marketing — DiamondWall ($DWALL)',hero_title:'Únete como <span class="accent">influencer</span> y promociona el futuro de DeFi en BSC.',hero_sub:'Chuminicky Publiciters es el canal oficial de campañas de marketing de DiamondWall ($DWALL) — plataforma DeFi de rendimiento real en Binance Smart Chain. Postúlate, coordina y cobra en $DWALL tokens (equivalente en USD al precio post-preventa).',hero_cta_campaigns:'Ver campañas activas',hero_cta_register:'Registrarme como influencer',stat_active:'Campañas activas',stat_influencers:'Influencers registrados',stat_channel:'Canal de mensajería por campaña',how_eyebrow:'Cómo funciona',how_title:'De la postulación al pago, en un solo lugar',flow1_t:'Publicamos la campaña',flow1_d:'Se crea una campaña con presupuesto en USD (pagado en $DWALL), plataforma, requisitos y fecha límite.',flow2_t:'Te postulas',flow2_d:'Completas tu ficha (redes, nicho, wallet BSC) y aplicas a la campaña que te interese.',flow3_t:'Se genera tu ficha',flow3_d:'Automáticamente queda registrada tu postulación, lista para revisión del equipo.',flow4_t:'Chat directo',flow4_d:'Coordinamos detalles, entregables y pago en tu canal privado con el equipo DiamondWall.',why_eyebrow:'Sobre el proyecto',why_title:'¿Qué es DiamondWall ($DWALL)?',why_text:'DiamondWall es una plataforma DeFi automatizada en Binance Smart Chain. Cuando un usuario compra $DWALL, su BNB se divide automáticamente: 50% invertido en Venus Protocol generando rendimiento real, 45% a pools de liquidez en 4 DEXs, y 5% a operaciones. Código 100% open source, 6 smart contracts auditados con 412 tests y 0 vulnerabilidades. Supply fijo, 0% fee de transferencia.',footer:'CHUMINICKY PUBLICITERS © 2026 — CANAL OFICIAL DE CAMPAÑAS DIAMONDWALL ($DWALL)',closes:'cierra',auth_login:'Iniciar sesión',auth_register:'Registro nuevo',auth_welcome:'Bienvenido de nuevo',auth_welcome_sub:'Accede con tu cuenta de influencer.',auth_email:'Email',auth_pass:'Contraseña',auth_name:'Nombre completo',auth_error_creds:'Email o contraseña incorrectos.',auth_error_fields:'Completa nombre, email y contraseña (mínimo 4 caracteres).',auth_error_exists:'Ya existe una cuenta con ese email.',auth_join:'Únete como influencer',auth_join_sub:'Regístrate para postularte a campañas de DiamondWall ($DWALL).',auth_profile_data:'Datos de perfil',auth_alias:'Alias / nombre público',auth_social:'Redes sociales',auth_niche:'Nicho',auth_niche_ph:'Ej: Cripto, DeFi, NFTs',auth_wallet:'Wallet BSC (para pagos)',auth_bio:'Bio',auth_bio_ph:'Cuéntanos brevemente sobre tu contenido...',auth_create:'Crear cuenta',auth_add_net:'+ Añadir red',auth_user_ph:'usuario o link',auth_followers_ph:'seguidores',auth_saving:'Guardando...',forgot_password:'¿Olvidaste tu contraseña?',forgot_title:'Recuperar contraseña',forgot_sub:'Ingresa tu email y te generaremos un código de 6 dígitos.',forgot_send:'Generar código',forgot_back:'Volver al login',forgot_error:'No existe cuenta con ese email.',forgot_success:'Tu código de recuperación es:',reset_title:'Nueva contraseña',reset_sub:'Ingresa el código y tu nueva contraseña.',reset_code:'Código de verificación',reset_new_pass:'Nueva contraseña',reset_confirm_pass:'Confirmar contraseña',reset_btn:'Cambiar contraseña',reset_next:'Continuar →',reset_error_code:'Código incorrecto o expirado.',reset_error_match:'Las contraseñas no coinciden.',reset_error_len:'Mínimo 4 caracteres.',reset_success:'¡Contraseña actualizada! Ya puedes iniciar sesión.',admin_title:'Acceso administrador',admin_sub:'Panel reservado para el equipo DiamondWall.',admin_email_label:'Email admin',admin_error:'Credenciales incorrectas.',admin_enter:'Entrar al panel',admin_back:'Volver al inicio',camp_eyebrow:'Oportunidades abiertas',camp_title:'Campañas ofertadas',filter_all:'Todas',filter_active:'Activas',filter_closed:'Cerradas',camp_active:'ACTIVA',camp_closed:'CERRADA',camp_no_results:'No hay campañas aquí',camp_try_filter:'Prueba con otro filtro.',camp_already:'Colaboración activa',camp_apply:'Participar',camp_login_first:'Inicia sesión',camp_deliverables:'Entregables requeridos',camp_payment_info:'Detalles de pago',apply_alias:'Alias: ',apply_wallet:'Wallet: ',contract_title:'Acuerdo de colaboración',contract_sub:'Al confirmar, aceptas las condiciones e inicias tu colaboración.',contract_campaign:'Campaña',contract_deliverables:'Entregables comprometidos',contract_payment:'Condiciones de pago',contract_deadline:'Fecha límite',contract_your_data:'Tus datos',contract_accept:'He leído y acepto las condiciones. Me comprometo a entregar el contenido descrito.',contract_start_date:'Fecha de inicio',contract_confirm:'Aceptar e iniciar colaboración',contract_auto_msg:'🤝 ¡Colaboración iniciada! {title} — Inicio: {date}. Bienvenido/a al equipo.',contract_legal:'Al aceptar, este acuerdo queda registrado con tu email, wallet y fecha.',dash_panel:'Panel',dash_visits:'Visitas',dash_registered:'Influencers',dash_active_camps:'Campañas activas',dash_total_apps:'Postulaciones',dash_campaigns:'Campañas',dash_applications:'Postulaciones',dash_influencers:'Influencers',dash_my_apps:'Mis postulaciones',dash_my_profile:'Mi perfil',dash_total:'total',dash_approve:'Aprobar',dash_reject:'Rechazar',tbl_title:'Título',tbl_platform:'Plataforma',tbl_pay:'Pago',tbl_status:'Estado',tbl_apps:'Post.',tbl_influencer:'Influencer',tbl_campaign:'Campaña',tbl_date:'Fecha',tbl_actions:'Acciones',tbl_alias:'Alias',tbl_email:'Email',tbl_niche:'Nicho',tbl_social:'Redes',tbl_wallet:'Wallet',tbl_deadline:'Pago',empty_apps_title:'Aún no hay postulaciones',empty_apps_text:'Aparecerán aquí cuando un influencer se postule.',empty_myapps_title:'Aún no te has postulado',empty_myapps_text:'Ve a Campañas y postúlate.',empty_myapps_cta:'Ver campañas',profile_followers:'seg.',chat_no_convos:'No tienes conversaciones activas.',chat_team:'Equipo Admin',chat_select:'Selecciona una conversación',chat_placeholder:'Escribe un mensaje...',chat_send:'Enviar',chat_no_msgs:'Sin mensajes aún',status_pendiente:'pendiente',status_aprobada:'aprobada',status_rechazada:'rechazada',status_completada:'completada',status_activa:'en curso'},
+en:{nav_home:'Home',nav_campaigns:'Campaigns',nav_panel:'Dashboard',nav_messages:'Messages',nav_login:'Log in',nav_register:'Sign up',nav_logout:'Log out',role_influencer:'INFLUENCER',hero_eyebrow:'Marketing campaigns — DiamondWall ($DWALL)',hero_title:'Join as an <span class="accent">influencer</span> and promote the future of DeFi on BSC.',hero_sub:'Chuminicky Publiciters is the official marketing campaign channel for DiamondWall ($DWALL) — a real yield DeFi platform on Binance Smart Chain. Apply, coordinate and get paid in $DWALL tokens (USD equivalent at post-presale price).',hero_cta_campaigns:'View active campaigns',hero_cta_register:'Register as influencer',stat_active:'Active campaigns',stat_influencers:'Registered influencers',stat_channel:'Messaging channel per campaign',how_eyebrow:'How it works',how_title:'From application to payment, all in one place',flow1_t:'We publish the campaign',flow1_d:'A campaign is created with USD budget (paid in $DWALL), platform, requirements and deadline.',flow2_t:'You apply',flow2_d:'Fill your profile (socials, niche, BSC wallet) and apply to the campaign you like.',flow3_t:'Your brief is generated',flow3_d:'Your application is automatically registered and ready for team review.',flow4_t:'Direct chat',flow4_d:'We coordinate details, deliverables and payment in your private channel with DiamondWall team.',why_eyebrow:'About the project',why_title:'What is DiamondWall ($DWALL)?',why_text:'DiamondWall is an automated DeFi platform on Binance Smart Chain. When a user buys $DWALL, their BNB is automatically split: 50% invested in Venus Protocol generating real yield, 45% to liquidity pools across 4 DEXs, and 5% to operations. 100% open source, 6 audited smart contracts with 412 tests and 0 vulnerabilities. Fixed supply, 0% transfer fee.',footer:'CHUMINICKY PUBLICITERS © 2026 — OFFICIAL DIAMONDWALL ($DWALL) CAMPAIGN CHANNEL',closes:'closes',auth_login:'Log in',auth_register:'Sign up',auth_welcome:'Welcome back',auth_welcome_sub:'Access with your influencer account.',auth_email:'Email',auth_pass:'Password',auth_name:'Full name',auth_error_creds:'Incorrect email or password.',auth_error_fields:'Fill in name, email and password (min 4 characters).',auth_error_exists:'An account with this email already exists.',auth_join:'Join as influencer',auth_join_sub:'Sign up to apply to DiamondWall ($DWALL) marketing campaigns.',auth_profile_data:'Profile details',auth_alias:'Alias / public name',auth_social:'Social media',auth_niche:'Niche',auth_niche_ph:'E.g.: Crypto, DeFi, NFTs',auth_wallet:'BSC Wallet (for payments)',auth_bio:'Bio',auth_bio_ph:'Tell us briefly about your content...',auth_create:'Create account',auth_add_net:'+ Add network',auth_user_ph:'username or link',auth_followers_ph:'followers',auth_saving:'Saving...',forgot_password:'Forgot your password?',forgot_title:'Password recovery',forgot_sub:'Enter your email and we\'ll generate a 6-digit code.',forgot_send:'Generate code',forgot_back:'Back to login',forgot_error:'No account found with that email.',forgot_success:'Your recovery code is:',reset_title:'New password',reset_sub:'Enter the code and your new password.',reset_code:'Verification code',reset_new_pass:'New password',reset_confirm_pass:'Confirm password',reset_btn:'Change password',reset_next:'Continue →',reset_error_code:'Incorrect or expired code.',reset_error_match:'Passwords don\'t match.',reset_error_len:'Minimum 4 characters.',reset_success:'Password updated! You can now log in.',admin_title:'Admin access',admin_sub:'Panel reserved for the DiamondWall team.',admin_email_label:'Admin email',admin_error:'Invalid credentials.',admin_enter:'Enter dashboard',admin_back:'Back to home',camp_eyebrow:'Open opportunities',camp_title:'Available campaigns',filter_all:'All',filter_active:'Active',filter_closed:'Closed',camp_active:'ACTIVE',camp_closed:'CLOSED',camp_no_results:'No campaigns here',camp_try_filter:'Try another filter.',camp_already:'Collaboration active',camp_apply:'Join campaign',camp_login_first:'Log in first',camp_deliverables:'Required deliverables',camp_payment_info:'Payment details',apply_alias:'Alias: ',apply_wallet:'Wallet: ',contract_title:'Collaboration agreement',contract_sub:'By confirming, you accept the conditions and formally start your collaboration.',contract_campaign:'Campaign',contract_deliverables:'Deliverables you commit to',contract_payment:'Payment terms',contract_deadline:'Delivery deadline',contract_your_data:'Your details',contract_accept:'I have read and accept the conditions. I commit to delivering the described content.',contract_start_date:'Collaboration start date',contract_confirm:'Accept & start collaboration',contract_auto_msg:'🤝 Collaboration started! {title} — Start: {date}. Welcome to the team.',contract_legal:'By accepting, this agreement is recorded with your email, wallet and date.',dash_panel:'Dashboard',dash_visits:'Visits',dash_registered:'Influencers',dash_active_camps:'Active campaigns',dash_total_apps:'Applications',dash_campaigns:'Campaigns',dash_applications:'Applications',dash_influencers:'Influencers',dash_my_apps:'My applications',dash_my_profile:'My profile',dash_total:'total',dash_approve:'Approve',dash_reject:'Reject',tbl_title:'Title',tbl_platform:'Platform',tbl_pay:'Pay',tbl_status:'Status',tbl_apps:'Apps',tbl_influencer:'Influencer',tbl_campaign:'Campaign',tbl_date:'Date',tbl_actions:'Actions',tbl_alias:'Alias',tbl_email:'Email',tbl_niche:'Niche',tbl_social:'Socials',tbl_wallet:'Wallet',tbl_deadline:'Pay',empty_apps_title:'No applications yet',empty_apps_text:'They\'ll appear once an influencer applies.',empty_myapps_title:'You haven\'t applied yet',empty_myapps_text:'Go to Campaigns and apply.',empty_myapps_cta:'View campaigns',profile_followers:'fol.',chat_no_convos:'You don\'t have active conversations yet.',chat_team:'Admin Team',chat_select:'Select a conversation to start chatting',chat_placeholder:'Write a message...',chat_send:'Send',chat_no_msgs:'No messages yet',status_pendiente:'pending',status_aprobada:'approved',status_rechazada:'rejected',status_completada:'completed',status_activa:'active'}};
 function t(k){return i18n[state.lang][k]||i18n.es[k]||k;}
 
-/* =========================================================
-   ESTADO
-   ========================================================= */
-const state={
-  view:'loading',authTab:'login',lang:'es',
-  currentUser:null,dashSection:'campañas',mobileMenuOpen:false,
-  activeChatId:null,campFilter:'todas',modal:null,formError:'',formSuccess:'',
-  secretClicks:0,secretClickTimer:null,visitCount:0,
-  resetEmail:'',
-  users:[{id:'u-admin',email:'diamondwallcoin@proton.me',password:'admin123',rol:'admin',nombre_completo:'DiamondWall Team',estado:'activo'}],
-  campañas:[{id:'c1',
-    titulo:{es:'Pre-lanzamiento $DWALL — Campaña de awareness en X',en:'$DWALL Pre-launch — Awareness Campaign on X'},
-    descripcion:{es:'Campaña de difusión pre-lanzamiento en BSC Mainnet. Mínimo 5 posts en X (Twitter) sobre DiamondWall: qué es, cómo funciona el rendimiento real via Venus Protocol, smart contracts auditados (412 tests, 0 vulnerabilidades), supply fijo y 0% fee. Etiquetar @diamondwallcoin, usar #DWALL #BSC #DeFi e incluir link del proyecto en al menos 2 posts.',
-     en:'Pre-launch awareness campaign before BSC Mainnet. Minimum 5 posts on X (Twitter) about DiamondWall: what it is, how real yield works via Venus Protocol, audited smart contracts (412 tests, 0 vulnerabilities), fixed supply and 0% fee. Tag @diamondwallcoin, use #DWALL #BSC #DeFi and include project link in at least 2 posts.'},
-    plataforma:'X (Twitter)',tipo:{es:'Posts + Hilos',en:'Posts + Threads'},presupuesto:50,moneda:'USD en $DWALL',
-    requisitos:{es:'Nicho cripto/DeFi/BSC, contenido en inglés o español, cuenta activa en X',en:'Crypto/DeFi/BSC niche, English or Spanish content, active X account'},
-    fecha_limite:'2026-08-15',estado:'activa',creado_por:'u-admin',
-    links:{web:'https://diamondwall.vercel.app',audit:'https://github.com/PRBx77/diamondwall-audit',twitter:'https://x.com/diamondwallcoin',github:'https://github.com/PRBx77/diamondwall-frontend'},
-    entregables:{es:'• Mínimo 5 posts sobre $DWALL en X\n• Etiquetar @diamondwallcoin en todos\n• Hashtags: #DWALL #BSC #DeFi\n• Link del proyecto en al menos 2 posts',
-     en:'• Minimum 5 posts about $DWALL on X\n• Tag @diamondwallcoin in all posts\n• Hashtags: #DWALL #BSC #DeFi\n• Include project link in at least 2 posts'},
-    pago_info:{es:'Pago de $50 USD equivalentes en tokens $DWALL. El monto en tokens se calculará al precio de $DWALL una vez cerrada la preventa y activado el trading en BSC Mainnet. Transferencia on-chain verificable.',
-     en:'Payment of $50 USD equivalent in $DWALL tokens. Token amount will be calculated at $DWALL price once presale closes and trading is activated on BSC Mainnet. Verifiable on-chain transfer.'}}],
-  postulaciones:[],mensajes:[],
-};
+/* =========================================================  STATE  ========================================================= */
+const CAMP=[{id:'c1',titulo:{es:'Pre-lanzamiento $DWALL — Campaña de awareness en X',en:'$DWALL Pre-launch — Awareness Campaign on X'},descripcion:{es:'Campaña de difusión pre-lanzamiento en BSC Mainnet. Mínimo 5 posts en X sobre DiamondWall: qué es, cómo funciona el rendimiento real via Venus Protocol, smart contracts auditados (412 tests, 0 vulnerabilidades), supply fijo y 0% fee. Etiquetar @diamondwallcoin, usar #DWALL #BSC #DeFi e incluir link del proyecto en al menos 2 posts.',en:'Pre-launch awareness campaign before BSC Mainnet. Minimum 5 posts on X about DiamondWall: what it is, how real yield works via Venus Protocol, audited smart contracts (412 tests, 0 vulnerabilities), fixed supply and 0% fee. Tag @diamondwallcoin, use #DWALL #BSC #DeFi and include project link in at least 2 posts.'},plataforma:'X (Twitter)',tipo:{es:'Posts + Hilos',en:'Posts + Threads'},presupuesto:50,moneda:'USD en $DWALL',requisitos:{es:'Nicho cripto/DeFi/BSC, contenido en inglés o español, cuenta activa en X',en:'Crypto/DeFi/BSC niche, English or Spanish content, active X account'},fecha_limite:'2026-08-15',estado:'activa',links:{web:'https://diamondwall.vercel.app',audit:'https://github.com/PRBx77/diamondwall-audit',twitter:'https://x.com/diamondwallcoin',github:'https://github.com/PRBx77/diamondwall-frontend'},entregables:{es:'• Mínimo 5 posts sobre $DWALL en X\n• Etiquetar @diamondwallcoin en todos\n• Hashtags: #DWALL #BSC #DeFi\n• Link del proyecto en al menos 2 posts',en:'• Minimum 5 posts about $DWALL on X\n• Tag @diamondwallcoin in all posts\n• Hashtags: #DWALL #BSC #DeFi\n• Include project link in at least 2 posts'},pago_info:{es:'Pago de $50 USD equivalentes en tokens $DWALL. El monto en tokens se calculará al precio de $DWALL una vez cerrada la preventa y activado el trading en BSC Mainnet. Transferencia on-chain verificable.',en:'Payment of $50 USD equivalent in $DWALL tokens. Token amount calculated at $DWALL price once presale closes and BSC Mainnet trading activates. Verifiable on-chain transfer.'}}];
+const ADMIN={id:'u-admin',email:'diamondwallcoin@proton.me',password:'admin123',rol:'admin',nombre_completo:'DiamondWall Team',estado:'activo'};
+
+const state={view:'landing',authTab:'login',lang:'es',currentUser:null,dashSection:'campañas',mobileMenuOpen:false,activeChatId:null,campFilter:'todas',modal:null,formError:'',formSuccess:'',secretClicks:0,secretClickTimer:null,visitCount:0,resetEmail:'',
+  users:[ADMIN],campañas:CAMP,postulaciones:[],mensajes:[]};
 
 function uid(p){return p+'-'+Math.random().toString(36).slice(2,9);}
 function lt(v){return typeof v==='object'&&v!==null?(v[state.lang]||v.es||v.en):v;}
-function statusT(s){return t('status_'+s);}
-function render(){const root=document.getElementById('root');if(root&&View[state.view]){root.innerHTML='';root.appendChild(View[state.view]());}}
+function stT(s){return t('status_'+s);}
+const root=document.getElementById('root');
+function render(){if(View[state.view]){root.innerHTML='';root.appendChild(View[state.view]());}}
 function go(view,extra){Object.assign(state,extra||{});state.view=view;render();window.scrollTo(0,0);}
-function el(tag,attrs,children){
+function el(tag,attrs,ch){
   const e=document.createElement(tag);
-  if(attrs)for(const k in attrs){
-    if(k==='class')e.className=attrs[k];
-    else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);
-    else if(k==='html')e.innerHTML=attrs[k];
-    else e.setAttribute(k,attrs[k]);
-  }
-  (children||[]).forEach(c=>{if(c!=null)e.appendChild(typeof c==='string'?document.createTextNode(c):c);});
+  if(attrs)for(const k in attrs){if(k==='class')e.className=attrs[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);else if(k==='html')e.innerHTML=attrs[k];else e.setAttribute(k,attrs[k]);}
+  (ch||[]).forEach(c=>{if(c!=null)e.appendChild(typeof c==='string'?document.createTextNode(c):c);});
   return e;
 }
-function fi(label,id,type,ph){const w=el('div',{class:'field'});w.appendChild(el('label',{for:id},[label]));const i=el('input',{type,id,placeholder:ph||''});w.appendChild(i);return{wrap:w,input:i};}
+function fi(lbl,id,type,ph){const w=el('div',{class:'field'});w.appendChild(el('label',{for:id},[lbl]));const i=el('input',{type,id,placeholder:ph||''});w.appendChild(i);return{wrap:w,input:i};}
 
-/* Contador visitas */
-(async function(){
-  try{
-    const visited=sessionStorage.getItem('cv');
-    const r=await fetch('https://api.counterapi.dev/v1/chuminicky-dwall/visits'+(visited?'':'/up'));
-    const d=await r.json();state.visitCount=d.count||0;
-    if(!visited)sessionStorage.setItem('cv','1');
-  }catch(e){state.visitCount='—';}
-})();
+/* visitas */
+(async()=>{try{const v=sessionStorage.getItem('cv');const r=await fetch('https://api.counterapi.dev/v1/chuminicky-dwall/visits'+(v?'':'/up'));const d=await r.json();state.visitCount=d.count||0;if(!v)sessionStorage.setItem('cv','1');}catch(e){state.visitCount='—';}})();
 
-function secretAdminClick(){
-  state.secretClicks++;clearTimeout(state.secretClickTimer);
-  state.secretClickTimer=setTimeout(()=>{state.secretClicks=0;},1200);
-  if(state.secretClicks>=5){state.secretClicks=0;state.currentUser?.rol==='admin'?go('dashboard'):go('admin_auth',{formError:''});}
-}
+function secretClick(){state.secretClicks++;clearTimeout(state.secretClickTimer);state.secretClickTimer=setTimeout(()=>{state.secretClicks=0;},1200);if(state.secretClicks>=5){state.secretClicks=0;state.currentUser?.rol==='admin'?go('dashboard'):go('admin_auth',{formError:'',formSuccess:'',authTab:'login'});}}
 
-/* =========================================================
-   LOADING VIEW
-   ========================================================= */
-function Loading(){
-  const d=el('div',{style:'min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:var(--ink);'});
-  d.innerHTML='<div style="width:28px;height:28px;background:var(--lime);border-radius:3px;transform:rotate(45deg);animation:spin 1s linear infinite;"></div><div style="font-family:var(--font-mono);font-size:12px;color:var(--slate);letter-spacing:.08em;">CONECTANDO...</div><style>@keyframes spin{to{transform:rotate(225deg);}}</style>';
-  return d;
-}
-
-/* =========================================================
-   NAV + FOOTER
-   ========================================================= */
+/* =========================================================  NAV  ========================================================= */
 function Nav(){
   const hw=el('div');
   const wrap=el('header',{class:'nav'});
-  const logo=el('div',{class:'logo',onclick:()=>go('landing')},[
-    el('span',{class:'mark',onclick:e=>{e.stopPropagation();secretAdminClick();}}),
-    el('span',{class:'word',html:'Chuminicky <span>Publiciters</span>'})
-  ]);
-  wrap.appendChild(logo);
-  const navItems=[[t('nav_home'),'landing'],[t('nav_campaigns'),'campaigns']];
-  if(state.currentUser){navItems.push([t('nav_panel'),'dashboard']);navItems.push([t('nav_messages'),'chat']);}
-  const links=el('nav',{class:'links'});
-  navItems.forEach(([label,v])=>links.appendChild(el('button',{class:'navbtn'+(state.view===v?' active':''),onclick:()=>go(v)},[label])));
-  wrap.appendChild(links);
-  const actions=el('div',{class:'nav-actions'});
-  actions.appendChild(el('button',{class:'lang-btn',onclick:()=>{state.lang=state.lang==='es'?'en':'es';render();}},[state.lang==='es'?'EN':'ES']));
-  actions.appendChild(el('button',{class:'burger',onclick:()=>{state.mobileMenuOpen=!state.mobileMenuOpen;render();}},[state.mobileMenuOpen?'✕':'☰']));
+  wrap.appendChild(el('div',{class:'logo',onclick:()=>go('landing')},[el('span',{class:'mark',onclick:e=>{e.stopPropagation();secretClick();}}),el('span',{class:'word',html:'Chuminicky <span>Publiciters</span>'})]));
+  const ni=[[t('nav_home'),'landing'],[t('nav_campaigns'),'campaigns']];
+  if(state.currentUser){ni.push([t('nav_panel'),'dashboard']);ni.push([t('nav_messages'),'chat']);}
+  const lnk=el('nav',{class:'links'});
+  ni.forEach(([l,v])=>lnk.appendChild(el('button',{class:'navbtn'+(state.view===v?' active':''),onclick:()=>go(v)},[l])));
+  wrap.appendChild(lnk);
+  const act=el('div',{class:'nav-actions'});
+  act.appendChild(el('button',{class:'lang-btn',onclick:()=>{state.lang=state.lang==='es'?'en':'es';render();}},[state.lang==='es'?'EN':'ES']));
+  act.appendChild(el('button',{class:'burger',onclick:()=>{state.mobileMenuOpen=!state.mobileMenuOpen;render();}},[state.mobileMenuOpen?'✕':'☰']));
   if(state.currentUser){
-    if(state.currentUser.rol!=='admin')actions.appendChild(el('span',{class:'pill'},[t('role_influencer')]));
-    actions.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>{state.currentUser=null;go('landing');}},[t('nav_logout')]));
+    if(state.currentUser.rol!=='admin')act.appendChild(el('span',{class:'pill'},[t('role_influencer')]));
+    act.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>{state.currentUser=null;go('landing');}},[t('nav_logout')]));
   }else{
-    actions.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'login'})},[t('nav_login')]));
-    actions.appendChild(el('button',{class:'btn btn-primary btn-sm',onclick:()=>go('auth',{authTab:'register'})},[t('nav_register')]));
+    act.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'login',formError:'',formSuccess:''})},[t('nav_login')]));
+    act.appendChild(el('button',{class:'btn btn-primary btn-sm',onclick:()=>go('auth',{authTab:'register',formError:'',formSuccess:''})},[t('nav_register')]));
   }
-  wrap.appendChild(actions);hw.appendChild(wrap);
+  wrap.appendChild(act);hw.appendChild(wrap);
   if(state.mobileMenuOpen){
     const mm=el('div',{class:'mobile-menu open'});
-    navItems.forEach(([label,v])=>mm.appendChild(el('button',{class:state.view===v?'active':'',onclick:()=>{state.mobileMenuOpen=false;go(v);}},[label])));
-    if(!state.currentUser){
-      mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'login'});}},[t('nav_login')]));
-      mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'register'});}},[t('nav_register')]));
-    }else mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;state.currentUser=null;go('landing');}},[t('nav_logout')]));
+    ni.forEach(([l,v])=>mm.appendChild(el('button',{class:state.view===v?'active':'',onclick:()=>{state.mobileMenuOpen=false;go(v);}},[l])));
+    if(!state.currentUser){mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'login',formError:'',formSuccess:''});}},[t('nav_login')]));mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;go('auth',{authTab:'register',formError:'',formSuccess:''});}},[t('nav_register')]));}
+    else mm.appendChild(el('button',{onclick:()=>{state.mobileMenuOpen=false;state.currentUser=null;go('landing');}},[t('nav_logout')]));
     hw.appendChild(mm);
   }
   return hw;
 }
 function Footer(){return el('footer',{},[t('footer')]);}
-function Ticker(){
-  const items=state.campañas.filter(c=>c.estado==='activa').map(c=>`<div class="tick-item"><span class="dot"></span><b>${lt(c.titulo).toUpperCase()}</b> · ${c.plataforma} · ${c.presupuesto} ${c.moneda} · ${t('closes')} ${c.fecha_limite}</div>`).join('');
-  const w=el('div',{class:'ticker-wrap'});w.innerHTML=`<div class="ticker">${items}${items}</div>`;return w;
-}
+function Ticker(){const it=state.campañas.filter(c=>c.estado==='activa').map(c=>`<div class="tick-item"><span class="dot"></span><b>${lt(c.titulo).toUpperCase()}</b> · ${c.plataforma} · ${c.presupuesto} ${c.moneda} · ${t('closes')} ${c.fecha_limite}</div>`).join('');const w=el('div',{class:'ticker-wrap'});w.innerHTML=`<div class="ticker">${it}${it}</div>`;return w;}
+function statB(n,l){return el('div',{class:'stat'},[el('div',{class:'num'},[n]),el('div',{class:'lbl'},[l])]);}
+function flowSteps(){const g=el('div',{class:'flow'});[['01',t('flow1_t'),t('flow1_d')],['02',t('flow2_t'),t('flow2_d')],['03',t('flow3_t'),t('flow3_d')],['04',t('flow4_t'),t('flow4_d')]].forEach(([n,tt,d])=>g.appendChild(el('div',{class:'flow-step'},[el('div',{class:'fnum'},[n]),el('h3',{},[tt]),el('p',{},[d])])));return g;}
 
-/* =========================================================
-   LANDING
-   ========================================================= */
+/* =========================================================  LANDING  ========================================================= */
 function Landing(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main');
-  m.appendChild(el('div',{class:'hero'},[
-    el('div',{class:'eyebrow'},[t('hero_eyebrow')]),
-    el('h1',{class:'hero-title',html:t('hero_title')}),
-    el('p',{class:'hero-sub'},[t('hero_sub')]),
-    el('div',{class:'hero-cta'},[
-      el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('hero_cta_campaigns')]),
-      el('button',{class:'btn btn-ghost',onclick:()=>go('auth',{authTab:'register'})},[t('hero_cta_register')])
-    ]),
-    el('div',{class:'hero-stats'},[
-      statB(state.campañas.filter(c=>c.estado==='activa').length+'',t('stat_active')),
-      statB(state.users.filter(u=>u.rol==='influencer').length+'',t('stat_influencers')),
-      statB('1',t('stat_channel'))
-    ])
-  ]));
+  m.appendChild(el('div',{class:'hero'},[el('div',{class:'eyebrow'},[t('hero_eyebrow')]),el('h1',{class:'hero-title',html:t('hero_title')}),el('p',{class:'hero-sub'},[t('hero_sub')]),el('div',{class:'hero-cta'},[el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('hero_cta_campaigns')]),el('button',{class:'btn btn-ghost',onclick:()=>go('auth',{authTab:'register',formError:'',formSuccess:''})},[t('hero_cta_register')])]),el('div',{class:'hero-stats'},[statB(state.campañas.filter(c=>c.estado==='activa').length+'',t('stat_active')),statB(state.users.filter(u=>u.rol==='influencer').length+'',t('stat_influencers')),statB('1',t('stat_channel'))])]));
   m.appendChild(Ticker());
   m.appendChild(el('div',{class:'section'},[el('div',{class:'section-head'},[el('div',{class:'eyebrow'},[t('how_eyebrow')]),el('h2',{class:'section-title'},[t('how_title')])]),flowSteps()]));
   m.appendChild(el('div',{class:'section'},[el('div',{class:'section-head'},[el('div',{class:'eyebrow'},[t('why_eyebrow')]),el('h2',{class:'section-title'},[t('why_title')])]),el('p',{style:'color:var(--slate);max-width:640px;line-height:1.7;font-size:14.5px;'},[t('why_text')])]));
   p.appendChild(m);p.appendChild(Footer());return p;
 }
-function statB(n,l){return el('div',{class:'stat'},[el('div',{class:'num'},[n]),el('div',{class:'lbl'},[l])]);}
-function flowSteps(){
-  const g=el('div',{class:'flow'});
-  [['01',t('flow1_t'),t('flow1_d')],['02',t('flow2_t'),t('flow2_d')],['03',t('flow3_t'),t('flow3_d')],['04',t('flow4_t'),t('flow4_d')]].forEach(([n,tt,d])=>g.appendChild(el('div',{class:'flow-step'},[el('div',{class:'fnum'},[n]),el('h3',{},[tt]),el('p',{},[d])])));
-  return g;
-}
 
-/* =========================================================
-   AUTH
-   ========================================================= */
+/* =========================================================  AUTH  ========================================================= */
 function Auth(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card'});
@@ -612,31 +310,21 @@ function Auth(){
   tabs.appendChild(el('button',{class:'auth-tab'+(state.authTab==='register'?' active':''),onclick:()=>go('auth',{authTab:'register',formError:'',formSuccess:''})},[t('auth_register')]));
   c.appendChild(tabs);
   if(state.authTab==='login'){
-    c.appendChild(el('h2',{class:'auth-title'},[t('auth_welcome')]));
-    c.appendChild(el('p',{class:'auth-sub'},[t('auth_welcome_sub')]));
+    c.appendChild(el('h2',{class:'auth-title'},[t('auth_welcome')]));c.appendChild(el('p',{class:'auth-sub'},[t('auth_welcome_sub')]));
     if(state.formError)c.appendChild(el('div',{class:'auth-error'},[state.formError]));
     if(state.formSuccess)c.appendChild(el('div',{class:'auth-success'},[state.formSuccess]));
-    const eF=fi(t('auth_email'),'l-e','email','tu@email.com'),pF=fi(t('auth_pass'),'l-p','password','');
+    const eF=fi(t('auth_email'),'l-e','email',''),pF=fi(t('auth_pass'),'l-p','password','');
     c.appendChild(eF.wrap);c.appendChild(pF.wrap);
     c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:6px;',onclick:async()=>{
       const em=eF.input.value.trim().toLowerCase(),pw=pF.input.value;
-      // Primero buscar en estado local
       let u=state.users.find(u=>u.email.toLowerCase()===em&&u.password===pw&&u.rol==='influencer');
-      if(!u){
-        // Buscar en Firebase
-        const fbUser=await window.DB?.getUser(em);
-        if(fbUser&&fbUser.password===pw&&fbUser.rol==='influencer'){
-          if(!state.users.find(x=>x.id===fbUser.id))state.users.push(fbUser);
-          u=fbUser;
-        }
-      }
-      if(!u){go('auth',{formError:t('auth_error_creds')});return;}
+      if(!u&&window.DB){const fb=await window.DB.getUser(em);if(fb&&fb.password===pw&&fb.rol==='influencer'){if(!state.users.find(x=>x.id===fb.id))state.users.push(fb);u=fb;}}
+      if(!u){go('auth',{authTab:'login',formError:t('auth_error_creds')});return;}
       state.currentUser=u;go('dashboard');
     }},[t('auth_login')]));
-    c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('forgot_password',{formError:'',formSuccess:''})},[t('forgot_password')])]));
+    c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('forgot',{formError:'',formSuccess:'',resetEmail:''})},[t('forgot_password')])]));
   }else{
-    c.appendChild(el('h2',{class:'auth-title'},[t('auth_join')]));
-    c.appendChild(el('p',{class:'auth-sub'},[t('auth_join_sub')]));
+    c.appendChild(el('h2',{class:'auth-title'},[t('auth_join')]));c.appendChild(el('p',{class:'auth-sub'},[t('auth_join_sub')]));
     if(state.formError)c.appendChild(el('div',{class:'auth-error'},[state.formError]));
     const nF=fi(t('auth_name'),'r-n','text',''),eF=fi(t('auth_email'),'r-e','email',''),pF=fi(t('auth_pass'),'r-p','password','');
     c.appendChild(nF.wrap);c.appendChild(eF.wrap);c.appendChild(pF.wrap);
@@ -644,130 +332,98 @@ function Auth(){
     c.appendChild(el('p',{style:'font-size:12px;color:var(--slate);margin-bottom:14px;'},[t('auth_profile_data')]));
     const aF=fi(t('auth_alias'),'r-a','text','@alias');c.appendChild(aF.wrap);
     const nw=el('div',{class:'field'}),nl=el('div',{});nw.appendChild(el('label',{},[t('auth_social')]));
-    let netRows=[];
-    function addNR(pl){
-      const r=el('div',{class:'net-row'}),
-        sel=el('select',{},['Twitter/X','TikTok','YouTube','Instagram'].map(pp=>el('option',{value:pp,...(pp===pl?{selected:'selected'}:{})},[pp]))),
-        ui=el('input',{type:'text',placeholder:t('auth_user_ph')}),
-        si=el('input',{type:'number',placeholder:t('auth_followers_ph')});
-      r.appendChild(sel);r.appendChild(ui);r.appendChild(si);netRows.push({sel,urlIn:ui,segIn:si});nl.appendChild(r);
-    }
-    addNR('Twitter/X');nw.appendChild(nl);
-    nw.appendChild(el('button',{type:'button',class:'add-net',onclick:()=>addNR('Twitter/X')},[t('auth_add_net')]));
-    c.appendChild(nw);
-    const niF=fi(t('auth_niche'),'r-ni','text',t('auth_niche_ph')),waF=fi(t('auth_wallet'),'r-w','text','0x...');
-    c.appendChild(niF.wrap);c.appendChild(waF.wrap);
-    const bw=el('div',{class:'field'});bw.appendChild(el('label',{},[t('auth_bio')]));
-    const bioF=el('textarea',{placeholder:t('auth_bio_ph')});bw.appendChild(bioF);c.appendChild(bw);
+    let nr=[];
+    function addNR(pl){const r=el('div',{class:'net-row'}),sel=el('select',{},['Twitter/X','TikTok','YouTube','Instagram'].map(pp=>el('option',{value:pp,...(pp===pl?{selected:'selected'}:{})},[pp]))),ui=el('input',{type:'text',placeholder:t('auth_user_ph')}),si=el('input',{type:'number',placeholder:t('auth_followers_ph')});r.appendChild(sel);r.appendChild(ui);r.appendChild(si);nr.push({sel,urlIn:ui,segIn:si});nl.appendChild(r);}
+    addNR('Twitter/X');nw.appendChild(nl);nw.appendChild(el('button',{type:'button',class:'add-net',onclick:()=>addNR('Twitter/X')},[t('auth_add_net')]));c.appendChild(nw);
+    const niF=fi(t('auth_niche'),'r-ni','text',t('auth_niche_ph')),waF=fi(t('auth_wallet'),'r-w','text','0x...');c.appendChild(niF.wrap);c.appendChild(waF.wrap);
+    const bw=el('div',{class:'field'});bw.appendChild(el('label',{},[t('auth_bio')]));const bioF=el('textarea',{placeholder:t('auth_bio_ph')});bw.appendChild(bioF);c.appendChild(bw);
     const btn=el('button',{class:'btn btn-primary',style:'width:100%;margin-top:10px;',onclick:async()=>{
       const em=eF.input.value.trim().toLowerCase(),nm=nF.input.value.trim(),pw=pF.input.value;
-      if(!nm||!em||pw.length<4){go('auth',{formError:t('auth_error_fields')});return;}
-      // Verificar duplicado localmente y en Firebase
-      if(state.users.some(u=>u.email.toLowerCase()===em)){go('auth',{formError:t('auth_error_exists')});return;}
-      const fbExisting=await window.DB?.getUser(em);
-      if(fbExisting){go('auth',{formError:t('auth_error_exists')});return;}
+      if(!nm||!em||pw.length<4){go('auth',{authTab:'register',formError:t('auth_error_fields')});return;}
+      if(state.users.some(u=>u.email.toLowerCase()===em)){go('auth',{authTab:'register',formError:t('auth_error_exists')});return;}
+      if(window.DB){const fb=await window.DB.getUser(em);if(fb){go('auth',{authTab:'register',formError:t('auth_error_exists')});return;}}
       btn.textContent=t('auth_saving');btn.disabled=true;
-      const nu={id:uid('u'),email:em,password:pw,rol:'influencer',nombre_completo:nm,estado:'activo',
-        perfil:{alias:aF.input.value.trim()||nm,
-          redes:netRows.map(r=>({plataforma:r.sel.value,url:r.urlIn.value.trim(),seguidores:Number(r.segIn.value)||0})).filter(r=>r.url),
-          nicho:niF.input.value.trim(),wallet:waF.input.value.trim(),bio:bioF.value.trim()}};
-      try{
-        await window.DB?.saveUser(nu);
-        state.users.push(nu);state.currentUser=nu;go('dashboard');
-      }catch(e){go('auth',{formError:'Error al guardar. Intenta de nuevo.'});}
+      const nu={id:uid('u'),email:em,password:pw,rol:'influencer',nombre_completo:nm,estado:'activo',perfil:{alias:aF.input.value.trim()||nm,redes:nr.map(r=>({plataforma:r.sel.value,url:r.urlIn.value.trim(),seguidores:Number(r.segIn.value)||0})).filter(r=>r.url),nicho:niF.input.value.trim(),wallet:waF.input.value.trim(),bio:bioF.value.trim()}};
+      try{if(window.DB)await window.DB.saveUser(nu);}catch(e){console.error(e);}
+      state.users.push(nu);state.currentUser=nu;go('dashboard');
     }},[t('auth_create')]);
     c.appendChild(btn);
   }
   w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
 }
 
-/* =========================================================
-   RECUPERACIÓN DE CONTRASEÑA
-   ========================================================= */
-function ForgotPassword(){
+/* =========================================================  RECUPERACIÓN  ========================================================= */
+function Forgot(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card'});
-  c.appendChild(el('h2',{class:'auth-title'},[t('forgot_title')]));
-  c.appendChild(el('p',{class:'auth-sub'},[t('forgot_sub')]));
+  c.appendChild(el('h2',{class:'auth-title'},[t('forgot_title')]));c.appendChild(el('p',{class:'auth-sub'},[t('forgot_sub')]));
   if(state.formError)c.appendChild(el('div',{class:'auth-error'},[state.formError]));
-  if(state.formSuccess)c.appendChild(el('div',{class:'auth-success',html:state.formSuccess}));
-  const eF=fi(t('auth_email'),'fp-e','email','');c.appendChild(eF.wrap);
-  c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:6px;',onclick:async()=>{
-    const em=eF.input.value.trim().toLowerCase();
-    let u=state.users.find(u=>u.email.toLowerCase()===em&&u.rol==='influencer');
-    if(!u){const fb=await window.DB?.getUser(em);if(fb&&fb.rol==='influencer')u=fb;}
-    if(!u){go('forgot_password',{formError:t('forgot_error')});return;}
-    const code=String(Math.floor(100000+Math.random()*900000));
-    const expires=Date.now()+1000*60*30;
-    await window.DB?.saveResetToken(em,code,expires);
-    go('forgot_password',{formError:'',formSuccess:`${t('forgot_success')}<b style="font-size:16px;color:var(--lime)">${code}</b><br><span style="font-size:11px;color:var(--slate)">Copia este código y úsalo en el siguiente paso. Válido 30 min.</span>`,resetEmail:em});
-  }},[t('forgot_send')]));
-  if(state.resetEmail)c.appendChild(el('button',{class:'btn btn-violet',style:'width:100%;margin-top:10px;',onclick:()=>go('reset_password',{formError:'',formSuccess:''})},[t('reset_btn')+' →']));
+  if(state.formSuccess){
+    const box=el('div',{class:'auth-success'});
+    box.innerHTML=`<div style="margin-bottom:6px">${t('forgot_success')}</div><div style="font-size:28px;font-weight:700;letter-spacing:8px;color:var(--lime);text-align:center;padding:10px 0">${state.formSuccess}</div><div style="font-size:11px;color:var(--slate);text-align:center">Copia este código · válido 30 minutos</div>`;
+    c.appendChild(box);
+    c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:12px;',onclick:()=>go('reset',{formError:'',formSuccess:''})},[t('reset_next')]));
+  }else{
+    const eF=fi(t('auth_email'),'fp-e','email','');c.appendChild(eF.wrap);
+    c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:6px;',onclick:async()=>{
+      const em=eF.input.value.trim().toLowerCase();
+      let u=state.users.find(u=>u.email.toLowerCase()===em&&u.rol==='influencer');
+      if(!u&&window.DB){const fb=await window.DB.getUser(em);if(fb&&fb.rol==='influencer')u=fb;}
+      if(!u){go('forgot',{formError:t('forgot_error'),formSuccess:''});return;}
+      const code=String(Math.floor(100000+Math.random()*900000)),expires=Date.now()+1800000;
+      if(window.DB)await window.DB.saveToken(em,code,expires);
+      go('forgot',{formError:'',formSuccess:code,resetEmail:em});
+    }},[t('forgot_send')]));
+  }
   c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('auth',{authTab:'login',formError:'',formSuccess:''})},[t('forgot_back')])]));
   w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
 }
 
-function ResetPassword(){
+function Reset(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card'});
-  c.appendChild(el('h2',{class:'auth-title'},[t('reset_title')]));
-  c.appendChild(el('p',{class:'auth-sub'},[t('reset_sub')]));
+  c.appendChild(el('h2',{class:'auth-title'},[t('reset_title')]));c.appendChild(el('p',{class:'auth-sub'},[t('reset_sub')]));
   if(state.formError)c.appendChild(el('div',{class:'auth-error'},[state.formError]));
   if(state.formSuccess)c.appendChild(el('div',{class:'auth-success'},[state.formSuccess]));
-  const codeF=fi(t('reset_code'),'rp-c','text',''),passF=fi(t('reset_new_pass'),'rp-p','password',''),confF=fi(t('reset_confirm_pass'),'rp-cp','password','');
-  c.appendChild(codeF.wrap);c.appendChild(passF.wrap);c.appendChild(confF.wrap);
+  const cF=fi(t('reset_code'),'rp-c','text',''),pF=fi(t('reset_new_pass'),'rp-p','password',''),cpF=fi(t('reset_confirm_pass'),'rp-cp','password','');
+  c.appendChild(cF.wrap);c.appendChild(pF.wrap);c.appendChild(cpF.wrap);
   c.appendChild(el('button',{class:'btn btn-primary',style:'width:100%;margin-top:6px;',onclick:async()=>{
-    const code=codeF.input.value.trim(),pw=passF.input.value,cpw=confF.input.value,em=state.resetEmail;
-    if(pw.length<4){go('reset_password',{formError:t('reset_error_len')});return;}
-    if(pw!==cpw){go('reset_password',{formError:t('reset_error_match')});return;}
-    const token=await window.DB?.getResetToken(em);
-    if(!token||token.deleted||token.code!==code||Date.now()>token.expires){go('reset_password',{formError:t('reset_error_code')});return;}
-    // Actualizar en Firebase
-    const fbUser=await window.DB?.getUser(em);
-    if(fbUser){fbUser.password=pw;await window.DB?.saveUser(fbUser);}
-    // Actualizar local
+    const code=cF.input.value.trim(),pw=pF.input.value,cpw=cpF.input.value,em=state.resetEmail;
+    if(pw.length<4){go('reset',{formError:t('reset_error_len')});return;}
+    if(pw!==cpw){go('reset',{formError:t('reset_error_match')});return;}
+    let valid=false;
+    if(window.DB){const tk=await window.DB.getToken(em);valid=tk&&tk.code===code&&Date.now()<tk.expires;}
+    if(!valid){go('reset',{formError:t('reset_error_code')});return;}
     const lu=state.users.find(u=>u.email.toLowerCase()===em);if(lu)lu.password=pw;
-    await window.DB?.deleteResetToken(em);
+    if(window.DB){const fb=await window.DB.getUser(em);if(fb){fb.password=pw;await window.DB.saveUser(fb);}await window.DB.delToken(em);}
     go('auth',{authTab:'login',formError:'',formSuccess:t('reset_success')});
   }},[t('reset_btn')]));
-  c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('forgot_password',{formError:'',formSuccess:''})},[t('forgot_back')])]));
+  c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('forgot',{formError:'',formSuccess:''})},[t('forgot_back')])]));
   w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
 }
 
-/* =========================================================
-   ADMIN AUTH
-   ========================================================= */
+/* =========================================================  ADMIN AUTH  ========================================================= */
 function AdminAuth(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main'),w=el('div',{class:'auth-wrap'}),c=el('div',{class:'auth-card',style:'border-color:var(--violet);'});
   c.appendChild(el('div',{style:'text-align:center;margin-bottom:20px;'},[el('span',{style:'display:inline-block;width:16px;height:16px;background:var(--violet);border-radius:3px;transform:rotate(45deg);'})]));
-  c.appendChild(el('h2',{class:'auth-title',style:'text-align:center;'},[t('admin_title')]));
-  c.appendChild(el('p',{class:'auth-sub',style:'text-align:center;'},[t('admin_sub')]));
+  c.appendChild(el('h2',{class:'auth-title',style:'text-align:center;'},[t('admin_title')]));c.appendChild(el('p',{class:'auth-sub',style:'text-align:center;'},[t('admin_sub')]));
   if(state.formError)c.appendChild(el('div',{class:'auth-error'},[state.formError]));
-  const eF=fi(t('admin_email_label'),'a-e','email',''),pF=fi(t('auth_pass'),'a-p','password','');
-  c.appendChild(eF.wrap);c.appendChild(pF.wrap);
+  const eF=fi(t('admin_email_label'),'a-e','email',''),pF=fi(t('auth_pass'),'a-p','password','');c.appendChild(eF.wrap);c.appendChild(pF.wrap);
   c.appendChild(el('button',{class:'btn btn-violet',style:'width:100%;margin-top:6px;',onclick:async()=>{
     const em=eF.input.value.trim().toLowerCase(),pw=pF.input.value;
-    const u=state.users.find(u=>u.email.toLowerCase()===em&&u.password===pw&&u.rol==='admin');
-    if(!u){go('admin_auth',{formError:t('admin_error')});return;}
-    // Recargar datos de Firebase al entrar como admin
+    if(em!==ADMIN.email||pw!==ADMIN.password){go('admin_auth',{formError:t('admin_error')});return;}
+    // Recargar todo de Firebase al entrar como admin
     if(window.DB){
-      try{
-        const [users,posts,msgs]=await Promise.all([window.DB.getAllUsers(),window.DB.getAllPostulaciones(),window.DB.getAllMensajes()]);
-        const admin=state.users.find(x=>x.rol==='admin');
-        state.users=[admin,...users.filter(x=>x.rol==='influencer')];
-        state.postulaciones=posts;state.mensajes=msgs;
-      }catch(e){}
+      try{const[us,po,ms]=await Promise.all([window.DB.getAllUsers(),window.DB.getAllPosts(),window.DB.getAllMsgs()]);state.users=[ADMIN,...us.filter(u=>u.rol==='influencer')];state.postulaciones=po;state.mensajes=ms;}catch(e){}
     }
-    state.currentUser=u;go('dashboard');
+    state.currentUser=ADMIN;go('dashboard');
   }},[t('admin_enter')]));
   c.appendChild(el('div',{class:'auth-foot'},[el('button',{onclick:()=>go('landing')},[t('admin_back')])]));
   w.appendChild(c);m.appendChild(w);p.appendChild(m);p.appendChild(Footer());return p;
 }
 
-/* =========================================================
-   CAMPAIGNS
-   ========================================================= */
+/* =========================================================  CAMPAIGNS  ========================================================= */
 function Campaigns(){
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const m=el('main',{class:'section'});
@@ -788,24 +444,13 @@ function campCard(c){
   cd.appendChild(el('div',{class:'camp-top'},[el('div',{class:'camp-title'},[lt(c.titulo)]),el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]));
   cd.appendChild(el('p',{class:'camp-desc'},[lt(c.descripcion)]));
   cd.appendChild(el('div',{class:'camp-meta'},[el('span',{class:'meta-tag'},[c.plataforma]),el('span',{class:'meta-tag'},[lt(c.tipo)]),el('span',{class:'meta-tag'},[lt(c.requisitos).split(',')[0]])]));
-  if(c.links){
-    const lnk=el('div',{class:'camp-links'});
-    if(c.links.web)lnk.appendChild(el('a',{href:c.links.web,target:'_blank',class:'camp-link'},['🌐 Web']));
-    if(c.links.audit)lnk.appendChild(el('a',{href:c.links.audit,target:'_blank',class:'camp-link'},['📂 Audit']));
-    if(c.links.twitter)lnk.appendChild(el('a',{href:c.links.twitter,target:'_blank',class:'camp-link'},['🐦 X/Twitter']));
-    if(c.links.github)lnk.appendChild(el('a',{href:c.links.github,target:'_blank',class:'camp-link'},['💻 GitHub']));
-    cd.appendChild(lnk);
-  }
+  if(c.links){const ln=el('div',{class:'camp-links'});if(c.links.web)ln.appendChild(el('a',{href:c.links.web,target:'_blank',class:'camp-link'},['🌐 Web']));if(c.links.audit)ln.appendChild(el('a',{href:c.links.audit,target:'_blank',class:'camp-link'},['📂 Audit']));if(c.links.twitter)ln.appendChild(el('a',{href:c.links.twitter,target:'_blank',class:'camp-link'},['🐦 X/Twitter']));if(c.links.github)ln.appendChild(el('a',{href:c.links.github,target:'_blank',class:'camp-link'},['💻 GitHub']));cd.appendChild(ln);}
   if(c.entregables)cd.appendChild(el('div',{class:'camp-deliverables'},[el('div',{class:'cdl-title'},[t('camp_deliverables')]),el('div',{class:'cdl-text',html:lt(c.entregables).replace(/\n/g,'<br>')})]));
   if(c.pago_info)cd.appendChild(el('div',{class:'camp-pago-info'},[el('div',{class:'cdl-title'},[t('camp_payment_info')]),el('div',{class:'cdl-text'},[lt(c.pago_info)])]));
   const pr=el('div',{class:'camp-pay'},[el('div',{},[el('div',{class:'pay-amt'},[c.presupuesto+' '+c.moneda]),el('div',{class:'pay-deadline'},[t('closes')+' '+c.fecha_limite])])]);
   if(c.estado==='activa'){
-    if(state.currentUser?.rol==='influencer'){
-      const ya=state.postulaciones.some(pp=>pp.campaña_id===c.id&&pp.influencer_id===state.currentUser.id);
-      pr.appendChild(el('button',{class:'btn '+(ya?'btn-ghost':'btn-violet')+' btn-sm',disabled:ya?'disabled':null,onclick:()=>{if(!ya)go('campaigns',{modal:{type:'apply',campaignId:c.id}});}},[ya?t('camp_already'):t('camp_apply')]));
-    }else if(!state.currentUser){
-      pr.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'register'})},[t('camp_login_first')]));
-    }
+    if(state.currentUser?.rol==='influencer'){const ya=state.postulaciones.some(pp=>pp.campaña_id===c.id&&pp.influencer_id===state.currentUser.id);pr.appendChild(el('button',{class:'btn '+(ya?'btn-ghost':'btn-violet')+' btn-sm',disabled:ya?'disabled':null,onclick:()=>{if(!ya)go('campaigns',{modal:{type:'apply',campaignId:c.id}});}},[ya?t('camp_already'):t('camp_apply')]));}
+    else if(!state.currentUser)pr.appendChild(el('button',{class:'btn btn-ghost btn-sm',onclick:()=>go('auth',{authTab:'register',formError:'',formSuccess:''})},[t('camp_login_first')]));
   }
   cd.appendChild(pr);return cd;
 }
@@ -815,138 +460,63 @@ function ApplyModal(cid){
   const md=el('div',{class:'modal',style:'max-width:560px;'});
   md.appendChild(el('div',{class:'modal-head'},[el('h2',{class:'auth-title'},[t('contract_title')]),el('button',{class:'modal-close',onclick:()=>go('campaigns',{modal:null})},['×'])]));
   md.appendChild(el('p',{class:'auth-sub'},[t('contract_sub')]));
-  const sum=el('div',{class:'contract-section'});
-  sum.appendChild(el('div',{class:'cdl-title'},[t('contract_campaign')]));
-  sum.appendChild(el('div',{class:'contract-row'},[el('b',{},[lt(c.titulo)])]));
-  sum.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.descripcion)]));
-  md.appendChild(sum);
+  const sum=el('div',{class:'contract-section'});sum.appendChild(el('div',{class:'cdl-title'},[t('contract_campaign')]));sum.appendChild(el('div',{class:'contract-row'},[el('b',{},[lt(c.titulo)])]));sum.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.descripcion)]));md.appendChild(sum);
   if(c.entregables){const d=el('div',{class:'contract-section'});d.appendChild(el('div',{class:'cdl-title'},[t('contract_deliverables')]));d.appendChild(el('div',{class:'contract-row contract-dim',html:lt(c.entregables).replace(/\n/g,'<br>')}));md.appendChild(d);}
-  const pay=el('div',{class:'contract-section'});
-  pay.appendChild(el('div',{class:'cdl-title'},[t('contract_payment')]));
-  pay.appendChild(el('div',{class:'contract-row'},[el('span',{class:'pay-amt',style:'font-size:16px;'},[c.presupuesto+' '+c.moneda])]));
-  if(c.pago_info)pay.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.pago_info)]));
-  pay.appendChild(el('div',{class:'contract-row contract-dim'},[t('contract_deadline')+': '+c.fecha_limite]));
-  md.appendChild(pay);
-  const pf=state.currentUser.perfil||{};
-  const inf=el('div',{class:'contract-section'});
-  inf.appendChild(el('div',{class:'cdl-title'},[t('contract_your_data')]));
-  inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_alias')+(pf.alias||'—')]));
-  inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_wallet')+(pf.wallet||'—')]));
-  md.appendChild(inf);
-  const cw=el('div',{class:'contract-check'}),cb=el('input',{type:'checkbox',id:'act'}),lbl=el('label',{for:'act'},[t('contract_accept')]);
-  cw.appendChild(cb);cw.appendChild(lbl);md.appendChild(cw);
+  const pay=el('div',{class:'contract-section'});pay.appendChild(el('div',{class:'cdl-title'},[t('contract_payment')]));pay.appendChild(el('div',{class:'contract-row'},[el('span',{class:'pay-amt',style:'font-size:16px;'},[c.presupuesto+' '+c.moneda])]));if(c.pago_info)pay.appendChild(el('div',{class:'contract-row contract-dim'},[lt(c.pago_info)]));pay.appendChild(el('div',{class:'contract-row contract-dim'},[t('contract_deadline')+': '+c.fecha_limite]));md.appendChild(pay);
+  const pf=state.currentUser.perfil||{};const inf=el('div',{class:'contract-section'});inf.appendChild(el('div',{class:'cdl-title'},[t('contract_your_data')]));inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_alias')+(pf.alias||'—')]));inf.appendChild(el('div',{class:'contract-row contract-dim'},[t('apply_wallet')+(pf.wallet||'—')]));md.appendChild(inf);
+  const cw=el('div',{class:'contract-check'}),cb=el('input',{type:'checkbox',id:'act'}),lbl=el('label',{for:'act'},[t('contract_accept')]);cw.appendChild(cb);cw.appendChild(lbl);md.appendChild(cw);
   const today=new Date().toISOString().slice(0,10);
   md.appendChild(el('div',{style:'font-family:var(--font-mono);font-size:10.5px;color:var(--slate);text-align:center;margin:12px 0 4px;'},[t('contract_start_date')+': '+today]));
-  const confirmBtn=el('button',{class:'btn btn-primary',style:'width:100%;margin-top:10px;opacity:0.4;cursor:not-allowed;',onclick:async()=>{
-    if(!cb.checked)return;
-    confirmBtn.disabled=true;confirmBtn.textContent='Guardando...';
-    const np={id:uid('p'),campaña_id:c.id,influencer_id:state.currentUser.id,estado:'activa',fecha_postulacion:today,fecha_inicio:today,link_contenido:'',comentario_admin:'',terms_accepted:true};
+  const confBtn=el('button',{class:'btn btn-primary',style:'width:100%;margin-top:10px;opacity:0.4;cursor:not-allowed;',onclick:async()=>{
+    if(!cb.checked)return;confBtn.disabled=true;confBtn.textContent='Guardando...';
+    const np={id:uid('p'),campaña_id:c.id,influencer_id:state.currentUser.id,estado:'activa',fecha_postulacion:today,fecha_inicio:today,terms_accepted:true};
     const nm={id:uid('m'),postulacion_id:np.id,de:'u-admin',texto:t('contract_auto_msg').replace('{title}',lt(c.titulo)).replace('{date}',today),hora:today};
-    try{
-      await window.DB?.savePostulacion(np);
-      await window.DB?.savemensaje(nm);
-      state.postulaciones.push(np);state.mensajes.push(nm);
-      go('campaigns',{modal:null});
-    }catch(e){confirmBtn.disabled=false;confirmBtn.textContent=t('contract_confirm');confirmBtn.style.opacity='1';}
+    try{if(window.DB){await window.DB.savePost(np);await window.DB.saveMsg(nm);}}catch(e){console.error(e);}
+    state.postulaciones.push(np);state.mensajes.push(nm);go('campaigns',{modal:null});
   }},[t('contract_confirm')]);
-  cb.addEventListener('change',()=>{confirmBtn.style.opacity=cb.checked?'1':'0.4';confirmBtn.style.cursor=cb.checked?'pointer':'not-allowed';});
-  md.appendChild(confirmBtn);
-  md.appendChild(el('div',{style:'font-size:11px;color:var(--slate);text-align:center;margin-top:14px;line-height:1.5;'},[t('contract_legal')]));
+  cb.addEventListener('change',()=>{confBtn.style.opacity=cb.checked?'1':'0.4';confBtn.style.cursor=cb.checked?'pointer':'not-allowed';});
+  md.appendChild(confBtn);md.appendChild(el('div',{style:'font-size:11px;color:var(--slate);text-align:center;margin-top:14px;line-height:1.5;'},[t('contract_legal')]));
   bg.appendChild(md);return bg;
 }
 
-/* =========================================================
-   DASHBOARD
-   ========================================================= */
+/* =========================================================  DASHBOARD  ========================================================= */
 function Dashboard(){
   if(!state.currentUser)return Auth();
   const p=el('div',{class:'app'});p.appendChild(Nav());
   const d=el('div',{class:'dash'}),isA=state.currentUser.rol==='admin';
   const sb=el('div',{class:'sidebar'}),sec=el('div',{class:'side-section'});
   sec.appendChild(el('div',{class:'side-label'},[t('dash_panel')]));
-  const items=isA
-    ?[[t('dash_campaigns'),state.campañas.length,'campañas'],[t('dash_applications'),state.postulaciones.length,'postulaciones'],[t('dash_influencers'),state.users.filter(u=>u.rol==='influencer').length,'influencers']]
-    :[[t('dash_my_apps'),state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id).length,'mis_post'],[t('dash_my_profile'),null,'mi_perfil']];
-  items.forEach(([label,count,key])=>sec.appendChild(el('button',{class:'side-btn'+(state.dashSection===key?' active':''),onclick:()=>go('dashboard',{dashSection:key})},[label,count!==null?el('span',{class:'side-count'},[String(count)]):null])));
+  const items=isA?[[t('dash_campaigns'),state.campañas.length,'campañas'],[t('dash_applications'),state.postulaciones.length,'postulaciones'],[t('dash_influencers'),state.users.filter(u=>u.rol==='influencer').length,'influencers']]:[[t('dash_my_apps'),state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id).length,'mis_post'],[t('dash_my_profile'),null,'mi_perfil']];
+  items.forEach(([l,cnt,k])=>sec.appendChild(el('button',{class:'side-btn'+(state.dashSection===k?' active':''),onclick:()=>go('dashboard',{dashSection:k})},[l,cnt!==null?el('span',{class:'side-count'},[String(cnt)]):null])));
   sb.appendChild(sec);d.appendChild(sb);
   const ct=el('div',{class:'dash-content'});
   if(isA){
-    const stats=el('div',{class:'admin-stats'});
-    [[String(state.visitCount),t('dash_visits'),'👁️'],[String(state.users.filter(u=>u.rol==='influencer').length),t('dash_registered'),'🎙️'],[String(state.campañas.filter(c=>c.estado==='activa').length),t('dash_active_camps'),'📢'],[String(state.postulaciones.length),t('dash_total_apps'),'📋']].forEach(([num,lbl,icon])=>stats.appendChild(el('div',{class:'stat-card'},[el('div',{class:'stat-icon'},[icon]),el('div',{class:'stat-num'},[num]),el('div',{class:'stat-lbl'},[lbl])])));
-    ct.appendChild(stats);
-    if(state.dashSection==='campañas')ct.appendChild(AdminCamp());
-    else if(state.dashSection==='influencers')ct.appendChild(AdminInf());
-    else ct.appendChild(AdminPost());
-  }else{
-    if(state.dashSection==='mi_perfil')ct.appendChild(InfPerfil());
-    else ct.appendChild(InfPost());
-  }
+    const st=el('div',{class:'admin-stats'});
+    [[String(state.visitCount),t('dash_visits'),'👁️'],[String(state.users.filter(u=>u.rol==='influencer').length),t('dash_registered'),'🎙️'],[String(state.campañas.filter(c=>c.estado==='activa').length),t('dash_active_camps'),'📢'],[String(state.postulaciones.length),t('dash_total_apps'),'📋']].forEach(([n,l,i])=>st.appendChild(el('div',{class:'stat-card'},[el('div',{class:'stat-icon'},[i]),el('div',{class:'stat-num'},[n]),el('div',{class:'stat-lbl'},[l])])));
+    ct.appendChild(st);
+    if(state.dashSection==='campañas')ct.appendChild(AdminCamp());else if(state.dashSection==='influencers')ct.appendChild(AdminInf());else ct.appendChild(AdminPost());
+  }else{if(state.dashSection==='mi_perfil')ct.appendChild(InfPerfil());else ct.appendChild(InfPost());}
   d.appendChild(ct);p.appendChild(d);return p;
 }
-function AdminCamp(){
-  const w=el('div');
-  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_campaigns')]),el('span',{class:'pill'},[state.campañas.length+' '+t('dash_total')])]));
-  const tb=el('table',{class:'tbl'});
-  tb.innerHTML=`<tr><th>${t('tbl_title')}</th><th>${t('tbl_platform')}</th><th>${t('tbl_pay')}</th><th>${t('tbl_status')}</th><th>${t('tbl_apps')}</th></tr>`;
-  state.campañas.forEach(c=>{const n=state.postulaciones.filter(pp=>pp.campaña_id===c.id).length;tb.appendChild(el('tr',{},[el('td',{},[lt(c.titulo)]),el('td',{},[c.plataforma]),el('td',{},[c.presupuesto+' '+c.moneda]),el('td',{},[el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]),el('td',{},[String(n)])]));});
-  w.appendChild(tb);return w;
-}
+function AdminCamp(){const w=el('div');w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_campaigns')]),el('span',{class:'pill'},[state.campañas.length+' '+t('dash_total')])]));const tb=el('table',{class:'tbl'});tb.innerHTML=`<tr><th>${t('tbl_title')}</th><th>${t('tbl_platform')}</th><th>${t('tbl_pay')}</th><th>${t('tbl_status')}</th><th>${t('tbl_apps')}</th></tr>`;state.campañas.forEach(c=>{const n=state.postulaciones.filter(pp=>pp.campaña_id===c.id).length;tb.appendChild(el('tr',{},[el('td',{},[lt(c.titulo)]),el('td',{},[c.plataforma]),el('td',{},[c.presupuesto+' '+c.moneda]),el('td',{},[el('span',{class:'badge '+c.estado},[c.estado==='activa'?t('camp_active'):t('camp_closed')])]),el('td',{},[String(n)])]));});w.appendChild(tb);return w;}
 function AdminPost(){
-  const w=el('div');
-  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_applications')]),el('span',{class:'pill'},[state.postulaciones.length+' '+t('dash_total')])]));
+  const w=el('div');w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_applications')]),el('span',{class:'pill'},[state.postulaciones.length+' '+t('dash_total')])]));
   if(!state.postulaciones.length){w.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['📭']),el('h3',{},[t('empty_apps_title')]),el('p',{},[t('empty_apps_text')])]));return w;}
-  const tb=el('table',{class:'tbl'});
-  tb.innerHTML=`<tr><th>${t('tbl_influencer')}</th><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_actions')}</th></tr>`;
+  const tb=el('table',{class:'tbl'});tb.innerHTML=`<tr><th>${t('tbl_influencer')}</th><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_actions')}</th></tr>`;
   state.postulaciones.forEach(pp=>{
-    const inf=state.users.find(u=>u.id===pp.influencer_id),camp=state.campañas.find(c=>c.id===pp.campaña_id);
-    const btns=[];
-    if(pp.estado==='pendiente'||pp.estado==='activa'){
-      btns.push(el('button',{class:'btn btn-sm btn-primary',style:'margin-right:6px;',onclick:async()=>{pp.estado='aprobada';await window.DB?.updatePostulacion(pp.id,{estado:'aprobada'});render();}},[t('dash_approve')]));
-      btns.push(el('button',{class:'btn btn-sm btn-ghost',style:'margin-right:6px;',onclick:async()=>{pp.estado='rechazada';await window.DB?.updatePostulacion(pp.id,{estado:'rechazada'});render();}},[t('dash_reject')]));
-    }
+    const inf=state.users.find(u=>u.id===pp.influencer_id),camp=state.campañas.find(c=>c.id===pp.campaña_id),btns=[];
+    btns.push(el('button',{class:'btn btn-sm btn-primary',style:'margin-right:6px;',onclick:async()=>{pp.estado='aprobada';if(window.DB)await window.DB.updatePost(pp.id,{estado:'aprobada'});render();}},[t('dash_approve')]));
+    btns.push(el('button',{class:'btn btn-sm btn-ghost',style:'margin-right:6px;',onclick:async()=>{pp.estado='rechazada';if(window.DB)await window.DB.updatePost(pp.id,{estado:'rechazada'});render();}},[t('dash_reject')]));
     btns.push(el('button',{class:'btn btn-sm btn-violet',onclick:()=>go('chat',{activeChatId:pp.id})},['Chat']));
-    tb.appendChild(el('tr',{},[el('td',{},[inf?(inf.perfil?.alias||inf.nombre_completo):'—']),el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[statusT(pp.estado)])]),el('td',{},btns)]));
+    tb.appendChild(el('tr',{},[el('td',{},[inf?(inf.perfil?.alias||inf.nombre_completo):'—']),el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[stT(pp.estado)])]),el('td',{},btns)]));
   });
   w.appendChild(tb);return w;
 }
-function AdminInf(){
-  const w=el('div'),infs=state.users.filter(u=>u.rol==='influencer');
-  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_influencers')]),el('span',{class:'pill'},[infs.length+' '+t('dash_total')])]));
-  const tb=el('table',{class:'tbl'});
-  tb.innerHTML=`<tr><th>${t('tbl_alias')}</th><th>${t('tbl_email')}</th><th>${t('tbl_niche')}</th><th>${t('tbl_social')}</th><th>${t('tbl_wallet')}</th></tr>`;
-  infs.forEach(u=>{const pf=u.perfil||{};tb.appendChild(el('tr',{},[el('td',{},[pf.alias||'—']),el('td',{},[u.email]),el('td',{},[pf.nicho||'—']),el('td',{},[(pf.redes||[]).map(r=>r.plataforma).join(', ')||'—']),el('td',{style:'font-family:var(--font-mono);font-size:11.5px;'},[pf.wallet||'—'])]));});
-  w.appendChild(tb);return w;
-}
-function InfPost(){
-  const w=el('div'),mine=state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id);
-  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_apps')]),el('span',{class:'pill'},[mine.length+' '+t('dash_total')])]));
-  if(!mine.length){w.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['🎯']),el('h3',{},[t('empty_myapps_title')]),el('p',{},[t('empty_myapps_text')])]));w.appendChild(el('div',{style:'text-align:center;margin-top:16px;'},[el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('empty_myapps_cta')])]));return w;}
-  const tb=el('table',{class:'tbl'});
-  tb.innerHTML=`<tr><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_deadline')}</th><th></th></tr>`;
-  mine.forEach(pp=>{const camp=state.campañas.find(c=>c.id===pp.campaña_id);tb.appendChild(el('tr',{},[el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[statusT(pp.estado)])]),el('td',{},[camp?camp.presupuesto+' '+camp.moneda:'—']),el('td',{},[el('button',{class:'btn btn-sm btn-violet',onclick:()=>go('chat',{activeChatId:pp.id})},['Chat'])])]));});
-  w.appendChild(tb);return w;
-}
-function InfPerfil(){
-  const pf=state.currentUser.perfil||{},w=el('div');
-  w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_profile')])]));
-  w.appendChild(el('div',{class:'auth-card',style:'max-width:480px;'},[
-    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_alias')]),
-    el('p',{style:'font-family:var(--font-display);font-size:18px;margin-bottom:16px;'},[pf.alias||'—']),
-    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_niche')]),
-    el('p',{style:'margin-bottom:16px;'},[pf.nicho||'—']),
-    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_wallet')]),
-    el('p',{style:'font-family:var(--font-mono);font-size:12.5px;margin-bottom:16px;'},[pf.wallet||'—']),
-    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_bio')]),
-    el('p',{style:'margin-bottom:16px;line-height:1.6;font-size:13.5px;'},[pf.bio||'—']),
-    el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:8px;'},[t('auth_social')]),
-    el('div',{class:'camp-meta'},(pf.redes||[]).map(r=>el('span',{class:'meta-tag'},[`${r.plataforma}: ${r.seguidores||0} ${t('profile_followers')}`])))
-  ]));
-  return w;
-}
+function AdminInf(){const w=el('div'),infs=state.users.filter(u=>u.rol==='influencer');w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_influencers')]),el('span',{class:'pill'},[infs.length+' '+t('dash_total')])]));const tb=el('table',{class:'tbl'});tb.innerHTML=`<tr><th>${t('tbl_alias')}</th><th>${t('tbl_email')}</th><th>${t('tbl_niche')}</th><th>${t('tbl_social')}</th><th>${t('tbl_wallet')}</th></tr>`;infs.forEach(u=>{const pf=u.perfil||{};tb.appendChild(el('tr',{},[el('td',{},[pf.alias||'—']),el('td',{},[u.email]),el('td',{},[pf.nicho||'—']),el('td',{},[(pf.redes||[]).map(r=>r.plataforma).join(', ')||'—']),el('td',{style:'font-family:var(--font-mono);font-size:11.5px;'},[pf.wallet||'—'])]));});w.appendChild(tb);return w;}
+function InfPost(){const w=el('div'),mine=state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id);w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_apps')]),el('span',{class:'pill'},[mine.length+' '+t('dash_total')])]));if(!mine.length){w.appendChild(el('div',{class:'empty'},[el('div',{class:'eicon'},['🎯']),el('h3',{},[t('empty_myapps_title')]),el('p',{},[t('empty_myapps_text')])]));w.appendChild(el('div',{style:'text-align:center;margin-top:16px;'},[el('button',{class:'btn btn-primary',onclick:()=>go('campaigns')},[t('empty_myapps_cta')])]));return w;}const tb=el('table',{class:'tbl'});tb.innerHTML=`<tr><th>${t('tbl_campaign')}</th><th>${t('tbl_date')}</th><th>${t('tbl_status')}</th><th>${t('tbl_deadline')}</th><th></th></tr>`;mine.forEach(pp=>{const camp=state.campañas.find(c=>c.id===pp.campaña_id);tb.appendChild(el('tr',{},[el('td',{},[camp?lt(camp.titulo):'—']),el('td',{},[pp.fecha_postulacion]),el('td',{},[el('span',{class:'status-pill status-'+pp.estado},[stT(pp.estado)])]),el('td',{},[camp?camp.presupuesto+' '+camp.moneda:'—']),el('td',{},[el('button',{class:'btn btn-sm btn-violet',onclick:()=>go('chat',{activeChatId:pp.id})},['Chat'])])]));});w.appendChild(tb);return w;}
+function InfPerfil(){const pf=state.currentUser.perfil||{},w=el('div');w.appendChild(el('div',{class:'dash-head'},[el('h2',{},[t('dash_my_profile')])]));w.appendChild(el('div',{class:'auth-card',style:'max-width:480px;'},[el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_alias')]),el('p',{style:'font-family:var(--font-display);font-size:18px;margin-bottom:16px;'},[pf.alias||'—']),el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_niche')]),el('p',{style:'margin-bottom:16px;'},[pf.nicho||'—']),el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_wallet')]),el('p',{style:'font-family:var(--font-mono);font-size:12.5px;margin-bottom:16px;'},[pf.wallet||'—']),el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:4px;'},[t('auth_bio')]),el('p',{style:'margin-bottom:16px;line-height:1.6;font-size:13.5px;'},[pf.bio||'—']),el('p',{style:'font-size:12.5px;color:var(--slate);margin-bottom:8px;'},[t('auth_social')]),el('div',{class:'camp-meta'},(pf.redes||[]).map(r=>el('span',{class:'meta-tag'},[`${r.plataforma}: ${r.seguidores||0} ${t('profile_followers')}`])))]));return w;}
 
-/* =========================================================
-   CHAT
-   ========================================================= */
+/* =========================================================  CHAT  ========================================================= */
 function Chat(){
   if(!state.currentUser)return Auth();
   const p=el('div',{class:'app'});p.appendChild(Nav());
@@ -954,17 +524,13 @@ function Chat(){
   const myP=isA?state.postulaciones:state.postulaciones.filter(pp=>pp.influencer_id===state.currentUser.id);
   const ly=el('div',{class:'chat-layout'}),cl=el('div',{class:'chat-list'});
   if(!myP.length)cl.appendChild(el('div',{style:'padding:24px;color:var(--slate);font-size:12.5px;'},[t('chat_no_convos')]));
-  myP.forEach(pp=>{
-    const camp=state.campañas.find(c=>c.id===pp.campaña_id),inf=state.users.find(u=>u.id===pp.influencer_id);
-    const msgs=state.mensajes.filter(mm=>mm.postulacion_id===pp.id),last=msgs[msgs.length-1];
-    cl.appendChild(el('div',{class:'chat-list-item'+(state.activeChatId===pp.id?' active':''),onclick:()=>go('chat',{activeChatId:pp.id})},[el('div',{class:'cli-top'},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')]),el('div',{class:'cli-camp'},[camp?lt(camp.titulo):'']),el('div',{class:'cli-preview'},[last?last.texto:t('chat_no_msgs')])]));
-  });
+  myP.forEach(pp=>{const camp=state.campañas.find(c=>c.id===pp.campaña_id),inf=state.users.find(u=>u.id===pp.influencer_id),msgs=state.mensajes.filter(mm=>mm.postulacion_id===pp.id),last=msgs[msgs.length-1];cl.appendChild(el('div',{class:'chat-list-item'+(state.activeChatId===pp.id?' active':''),onclick:()=>go('chat',{activeChatId:pp.id})},[el('div',{class:'cli-top'},[isA?(inf?.perfil?.alias||inf?.nombre_completo||'—'):t('chat_team')]),el('div',{class:'cli-camp'},[camp?lt(camp.titulo):'']),el('div',{class:'cli-preview'},[last?last.texto:t('chat_no_msgs')])]));});
   ly.appendChild(cl);
   const wn=el('div',{class:'chat-window'}),ap=state.postulaciones.find(pp=>pp.id===state.activeChatId)||(myP.length===1?myP[0]:null);
   if(!ap){wn.appendChild(el('div',{class:'chat-empty'},[el('div',{style:'font-size:28px;'},['💬']),el('div',{},[t('chat_select')])]));}
   else{
     const camp=state.campañas.find(c=>c.id===ap.campaña_id),inf=state.users.find(u=>u.id===ap.influencer_id);
-    wn.appendChild(el('div',{class:'chat-header'},[el('div',{},[el('h3',{},[isA?(inf?.perfil?.alias||inf?.nombre_completo):t('chat_team')+' · DiamondWall']),el('div',{class:'sub'},[camp?lt(camp.titulo):''])]),el('span',{class:'status-pill status-'+ap.estado},[statusT(ap.estado)])]));
+    wn.appendChild(el('div',{class:'chat-header'},[el('div',{},[el('h3',{},[isA?(inf?.perfil?.alias||inf?.nombre_completo||'—'):t('chat_team')+' · DiamondWall']),el('div',{class:'sub'},[camp?lt(camp.titulo):''])]),el('span',{class:'status-pill status-'+ap.estado},[stT(ap.estado)])]));
     const mw=el('div',{class:'chat-msgs',id:'cmsg'});
     state.mensajes.filter(mm=>mm.postulacion_id===ap.id).forEach(mm=>{const mine=mm.de===state.currentUser.id;mw.appendChild(el('div',{class:'msg '+(mine?'out':'in')},[mm.texto,el('span',{class:'mt'},[mm.hora])]));});
     wn.appendChild(mw);
@@ -973,22 +539,36 @@ function Chat(){
     const sb=el('button',{class:'btn btn-primary',onclick:async()=>{
       const tx=inp.value.trim();if(!tx)return;
       const nm={id:uid('m'),postulacion_id:ap.id,de:state.currentUser.id,texto:tx,hora:new Date().toLocaleTimeString(state.lang,{hour:'2-digit',minute:'2-digit'})};
-      try{await window.DB?.savemensaje(nm);}catch(e){}
+      try{if(window.DB)await window.DB.saveMsg(nm);}catch(e){}
       state.mensajes.push(nm);go('chat',{activeChatId:ap.id});
       setTimeout(()=>{const sc=document.getElementById('cmsg');if(sc)sc.scrollTop=sc.scrollHeight;},0);
     }},[t('chat_send')]);
     ir.appendChild(inp);ir.appendChild(sb);wn.appendChild(ir);
   }
-  ly.appendChild(wn);p.appendChild(ly);
-  setTimeout(()=>{const sc=document.getElementById('cmsg');if(sc)sc.scrollTop=sc.scrollHeight;},0);
-  return p;
+  ly.appendChild(wn);p.appendChild(ly);setTimeout(()=>{const sc=document.getElementById('cmsg');if(sc)sc.scrollTop=sc.scrollHeight;},0);return p;
 }
 
-/* =========================================================
-   ROUTER
-   ========================================================= */
-const View={loading:Loading,landing:Landing,auth:Auth,admin_auth:AdminAuth,campaigns:Campaigns,dashboard:Dashboard,chat:Chat,forgot_password:ForgotPassword,reset_password:ResetPassword};
-render();
+/* =========================================================  ROUTER  ========================================================= */
+const View={landing:Landing,auth:Auth,admin_auth:AdminAuth,campaigns:Campaigns,dashboard:Dashboard,chat:Chat,forgot:Forgot,reset:Reset};
+
+// Arrancar cuando Firebase esté listo
+window.addEventListener('fb-ready',()=>{
+  const fd=window.__fbData||{users:[],posts:[],msgs:[]};
+  state.users=[ADMIN,...(fd.users||[]).filter(u=>u.rol==='influencer')];
+  state.postulaciones=fd.posts||[];
+  state.mensajes=fd.msgs||[];
+  document.getElementById('loader').style.display='none';
+  render();
+});
+
+// Fallback: si Firebase tarda más de 8 segundos, arrancar sin datos
+setTimeout(()=>{
+  const loader=document.getElementById('loader');
+  if(loader&&loader.style.display!=='none'){
+    loader.style.display='none';
+    render();
+  }
+},8000);
 </script>
 </body>
 </html>
